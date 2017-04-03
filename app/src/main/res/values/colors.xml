@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_default">#FF5722</color>
+    <color name="primary_dark_default">#D84315</color>
+    <color name="accent_default">#9d00d2</color>
+
+    <!-- palette -->
+    <color name="white">#ffffff</color>
+    <color name="almost_white">#FAFAFA</color>
+    <color name="black">#000000</color>
+    <color name="black_opacity_55">#8C000000</color>
+    <color name="black_opacity_35">#59000000</color>
+</resources>

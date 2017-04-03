@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Places</string>
+
+    <string name="meters" formatted="false">%d m</string>
+    <string name="kilometers" formatted="false">%.2f km</string>
+    <string name="percent" translatable="false" formatted="false">%d%%</string>
+
+    <string name="error.server">Server error. Please, try again later</string>
+
+    <string name="main.navigation.places">Places</string>
+    <string name="main.navigation.map">Map</string>
+    <string name="main.navigation.about">About</string>
+
+    <string name="places.empty">No places found</string>
+</resources>
