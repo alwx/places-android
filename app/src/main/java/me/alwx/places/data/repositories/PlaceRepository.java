@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import me.alwx.places.data.network.DefaultApiInterface;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 
@@ -35,7 +37,7 @@ public class PlaceRepository {
     }
 
     public Observable<String> fetchPlaces() {
-        BehaviorSubject<String> requestSubject = BehaviorSubject.create();
+        final BehaviorSubject<String> requestSubject = BehaviorSubject.create();
 
         api.getPlaces().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -58,20 +60,23 @@ public class PlaceRepository {
                     }
                 });
 
-        return requestSubject.asObservable();
+        return requestSubject.asObservable().cache();
     }
 
     public Observable<List<Place>> getPlaces() {
         return database
                 .createQuery(Place.TABLE_NAME, Place.selectAll())
-                .map(query -> {
-                    List<Place> result = new ArrayList<>();
-                    try (Cursor cursor = query.run()) {
-                        while (cursor.moveToNext()) {
-                            result.add(Place.SELECT_ALL_MAPPER.map(cursor));
+                .map(new Func1<SqlBrite.Query, List<Place>>() {
+                    @Override
+                    public List<Place> call(SqlBrite.Query query) {
+                        List<Place> result = new ArrayList<>();
+                        try (Cursor cursor = query.run()) {
+                            while (cursor.moveToNext()) {
+                                result.add(Place.SELECT_ALL_MAPPER.map(cursor));
+                            }
                         }
+                        return result;
                     }
-                    return result;
                 });
     }
 }

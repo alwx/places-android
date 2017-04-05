@@ -3,6 +3,7 @@ package me.alwx.places.data.models;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
@@ -11,7 +12,15 @@ import com.squareup.sqldelight.RowMapper;
 
 @AutoValue
 public abstract class Place implements PlaceModel, Parcelable {
-    private static final Factory<Place> FACTORY = new Factory<>(AutoValue_Place::new);
+    private static final Factory<Place> FACTORY = new Factory<>(new PlaceModel.Creator<Place>() {
+        @Override
+        public Place create(long _id,
+                            @NonNull String title,
+                            @NonNull String description,
+                            @NonNull String phone) {
+            return new AutoValue_Place(_id, title, description, phone);
+        }
+    });
 
     public static final RowMapper<Place> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
 

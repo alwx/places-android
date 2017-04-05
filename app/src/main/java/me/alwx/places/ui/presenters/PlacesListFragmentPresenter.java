@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
+import me.alwx.places.data.models.Place;
 import me.alwx.places.data.repositories.PlaceRepository;
 import me.alwx.places.ui.adapters.PlacesAdapter;
 import me.alwx.places.ui.fragments.PlacesListFragment;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -62,9 +64,12 @@ public class PlacesListFragmentPresenter implements Presenter {
         getPlacesSubscription = placeRepository.getPlaces()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(list -> {
-                    fragment.setPlaceList(list);
-                    fragment.showLoading(false);
+                .subscribe(new Action1<List<Place>>() {
+                    @Override
+                    public void call(List<Place> places) {
+                        fragment.setPlaceList(places);
+                        fragment.showLoading(false);
+                    }
                 });
     }
 }

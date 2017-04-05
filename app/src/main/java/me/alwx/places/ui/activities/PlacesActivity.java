@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.BottomNavigationView;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -93,20 +95,25 @@ public class PlacesActivity extends BaseActivity {
     }
 
     private void initBottomBar() {
-        binding.bottomNav.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_places:
-                    attachSectionFragment(Section.PLACES);
-                    break;
-                case R.id.action_map:
-                    attachSectionFragment(Section.MAP);
-                    break;
-                case R.id.action_about:
-                    attachSectionFragment(Section.ABOUT);
-                    break;
-            }
-            return true;
-        });
+        binding.bottomNav.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_places:
+                                attachSectionFragment(Section.PLACES);
+                                break;
+                            case R.id.action_map:
+                                attachSectionFragment(Section.MAP);
+                                break;
+                            case R.id.action_about:
+                                attachSectionFragment(Section.ABOUT);
+                                break;
+                        }
+                        return true;
+                    }
+                }
+        );
     }
 
     private void attachSectionFragment(@NonNull Section section) {
