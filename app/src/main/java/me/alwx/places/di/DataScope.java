@@ -1,11 +1,11 @@
-package me.alwx.places.data;
+package me.alwx.places.di;
+
+import javax.inject.Scope;
 
 /**
  * @author alwx
  * @version 1.0
  */
-
-import javax.inject.Scope;
 
 @Scope
 public @interface DataScope {

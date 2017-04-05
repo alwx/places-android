@@ -1,77 +1,37 @@
 package me.alwx.places.data.models;
 
-public class Place {
-    private int id;
-    private String title;
-    private String description;
-    private String phone;
-    private Address address;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Parcelable;
 
-    private float lat;
-    private float lng;
-    private double distance;
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.squareup.sqldelight.RowMapper;
 
-    public int getId() {
-        return id;
+@AutoValue
+public abstract class Place implements PlaceModel, Parcelable {
+    private static final Factory<Place> FACTORY = new Factory<>(AutoValue_Place::new);
+
+    public static final RowMapper<Place> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
+
+    public static String selectAll() {
+        return FACTORY.SelectAll().statement;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public static void insert(SQLiteOpenHelper dbOpenHelper, Place place) {
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+        Place.InsertRow insertRow = new Place.InsertRow(db);
+        insertRow.bind(place.title(), place.description(), place.phone());
+        insertRow.program.executeInsert();
     }
 
-    public String getTitle() {
-        return title;
+    public static void deleteAll(SQLiteOpenHelper dbOpenHelper) {
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+        db.execSQL(DELETEALL);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String title) {
-        this.description = description;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public float getLat() {
-        return lat;
-    }
-
-    public void setLat(float lat) {
-        this.lat = lat;
-    }
-
-    public float getLng() {
-        return lng;
-    }
-
-    public void setLng(float lng) {
-        this.lng = lng;
-    }
-
-    public double getDistance() {
-        return distance;
-    }
-
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public static TypeAdapter<Place> typeAdapter(Gson gson) {
+        return new AutoValue_Place.GsonTypeAdapter(gson);
     }
 }

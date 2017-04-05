@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.squareup.sqldelight'
 
 android {
     compileSdkVersion 25
@@ -10,7 +11,6 @@ android {
 
     defaultConfig {
         applicationId "me.alwx.places"
-        minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -18,6 +18,14 @@ android {
 
         vectorDrawables.useSupportLibrary = true
         jackOptions.enabled true
+    }
+    productFlavors {
+        prod {
+            minSdkVersion 15
+        }
+        dev {
+            minSdkVersion 21
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -45,8 +53,17 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
 
     compile 'javax.annotation:javax.annotation-api:1.2'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.8'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.2.9'
+    compile 'com.squareup.sqlbrite:sqlbrite:1.1.1'
+
+    // auto-value
+    provided 'com.google.auto.value:auto-value:1.2'
+    annotationProcessor 'com.google.auto.value:auto-value:1.2'
+    provided 'com.ryanharter.auto.value:auto-value-gson:0.4.6'
+    annotationProcessor 'com.ryanharter.auto.value:auto-value-gson:0.4.6'
+    compile 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.5'
+    annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.5'
 
     // debugging
     compile 'com.facebook.stetho:stetho:1.4.2'
@@ -59,9 +76,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.1'
 
     // networking
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
     // tests

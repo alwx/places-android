@@ -5,21 +5,20 @@ import android.content.Context;
 
 import com.facebook.stetho.Stetho;
 
-import me.alwx.places.DaggerAppComponent;
-import me.alwx.places.data.components.NetworkComponent;
-import me.alwx.places.data.components.DaggerNetworkComponent;
-import me.alwx.places.data.modules.ApiDefaultModule;
-import me.alwx.places.data.modules.ApiGoogleModule;
-import me.alwx.places.data.modules.NetworkModule;
-import me.alwx.places.data.PlacesComponent;
-import me.alwx.places.data.PlacesModule;
+import me.alwx.places.di.DaggerAppComponent;
+import me.alwx.places.di.PlacesComponent;
+import me.alwx.places.di.PlacesModule;
+import me.alwx.places.data.db.DbModule;
+import me.alwx.places.di.AppComponent;
+import me.alwx.places.di.AppModule;
+import me.alwx.places.data.network.NetworkModule;
+import timber.log.Timber;
 
 /**
  * @author alwx
  * @version 1.0
  */
 public class App extends Application {
-    private NetworkComponent networkComponent;
     private AppComponent appComponent;
     private PlacesComponent placesComponent;
 
@@ -27,16 +26,18 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Stetho.initializeWithDefaults(this);
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
-        networkComponent = DaggerNetworkComponent.builder()
-                .networkModule(new NetworkModule())
-                .build();
+        initializeDependencyInjector();
+    }
 
+    private void initializeDependencyInjector() {
         appComponent = DaggerAppComponent.builder()
-                .networkComponent(networkComponent)
                 .appModule(new AppModule(this))
-                .apiDefaultModule(new ApiDefaultModule())
-                .apiGoogleModule(new ApiGoogleModule())
+                .networkModule(new NetworkModule())
+                .dbModule(new DbModule(this))
                 .build();
 
         placesComponent = appComponent.plus(new PlacesModule());

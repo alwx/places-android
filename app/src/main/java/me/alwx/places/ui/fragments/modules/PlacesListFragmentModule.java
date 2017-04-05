@@ -2,11 +2,11 @@ package me.alwx.places.ui.fragments.modules;
 
 import dagger.Module;
 import dagger.Provides;
-import me.alwx.places.data.api.PlacesManager;
+import me.alwx.places.data.repositories.PlaceRepository;
 import me.alwx.places.ui.fragments.FragmentScope;
 import me.alwx.places.ui.adapters.PlacesAdapter;
 import me.alwx.places.ui.fragments.PlacesListFragment;
-import me.alwx.places.ui.fragments.presenters.PlacesListFragmentPresenter;
+import me.alwx.places.ui.presenters.PlacesListFragmentPresenter;
 
 @Module
 public class PlacesListFragmentModule {
@@ -24,7 +24,7 @@ public class PlacesListFragmentModule {
 
     @Provides
     @FragmentScope
-    PlacesListFragmentPresenter providePresenter(PlacesManager placesManager) {
-        return new PlacesListFragmentPresenter(fragment, placesManager);
+    PlacesListFragmentPresenter providePresenter(PlaceRepository placeRepository) {
+        return new PlacesListFragmentPresenter(fragment, placeRepository);
     }
 }

@@ -6,27 +6,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
-import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.observers.DisposableObserver;
 import me.alwx.places.App;
 import me.alwx.places.R;
-import me.alwx.places.data.api.PlacesManager;
-import me.alwx.places.data.models.Place;
-import me.alwx.places.data.modules.ApiDefaultModule;
-import me.alwx.places.data.modules.ApiGoogleModule;
-import me.alwx.places.data.PlacesModule;
+import me.alwx.places.data.repositories.PlaceRepository;
 import me.alwx.places.databinding.ActivityMainBinding;
+import me.alwx.places.data.network.DefaultApiInterface;
+import me.alwx.places.data.network.GoogleApiInterface;
 import me.alwx.places.ui.activities.modules.PlacesActivityModule;
-import me.alwx.places.ui.activities.presenters.PlacesActivityPresenter;
+import me.alwx.places.ui.presenters.PlacesActivityPresenter;
 import me.alwx.places.ui.fragments.PlacesAboutFragment;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.ui.fragments.PlacesListFragment;
@@ -38,16 +30,16 @@ import timber.log.Timber;
  */
 public class PlacesActivity extends BaseActivity {
     @Inject
-    ApiDefaultModule.ApiInterface apiInterface;
+    DefaultApiInterface apiInterface;
 
     @Inject
-    ApiGoogleModule.ApiInterface googleApiInterface;
+    GoogleApiInterface googleGoogleApiInterface;
 
     @Inject
     GoogleApiClient googleApiClient;
 
     @Inject
-    PlacesManager placesManager;
+    PlaceRepository placeRepository;
 
     @Inject
     PlacesActivityPresenter presenter;
@@ -59,12 +51,15 @@ public class PlacesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        initBottomBar();
+        attachSectionFragment(Section.PLACES);
+    }
+
+    @Override
+    protected void initializeDependencyInjector() {
         App.get(this).getPlacesComponent()
                 .plus(new PlacesActivityModule(this))
                 .inject(this);
-
-        initBottomBar();
-        attachSectionFragment(Section.PLACES);
     }
 
     @Override
@@ -74,9 +69,27 @@ public class PlacesActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.onPause();
+    }
+
+    @Override
     public void onStop() {
         googleApiClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     private void initBottomBar() {

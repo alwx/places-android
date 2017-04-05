@@ -57,10 +57,10 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
                 onClickListener.onClick(holder.getAdapterPosition());
             }
         });*/
-        holder.binding.name.setText(place.getTitle());
-        holder.binding.address.setText(place.getAddress().toString());
+        holder.binding.name.setText(place.title());
+        //holder.binding.address.setText(place.getAddress().toString());
 
-        setDistance(place.getDistance(), holder.binding.distance);
+        //setDistance(place.getDistance(), holder.binding.distance);
     }
 
     private void setDistance(double distance, final TextView distanceView) {

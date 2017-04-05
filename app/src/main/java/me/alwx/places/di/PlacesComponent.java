@@ -1,4 +1,4 @@
-package me.alwx.places.data;
+package me.alwx.places.di;
 
 import dagger.Subcomponent;
 import me.alwx.places.ui.activities.components.PlacesActivityComponent;
