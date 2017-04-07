@@ -30,9 +30,4 @@ public class PlacesRemoteDataSource implements PlacesDataSource {
     public void savePlace(@NonNull Place place) {
         throw new RuntimeException("Not supported");
     }
-
-    @Override
-    public void refreshPlaces() {
-
-    }
 }

@@ -9,6 +9,7 @@ import com.squareup.sqlbrite.BriteDatabase;
 
 import java.util.List;
 
+import me.alwx.places.data.models.Address;
 import me.alwx.places.data.models.Place;
 import me.alwx.places.data.repositories.PlacesDataSource;
 import rx.Observable;
@@ -35,7 +36,7 @@ public class PlacesLocalDataSource implements PlacesDataSource {
                 .mapToList(new Func1<Cursor, Place>() {
                     @Override
                     public Place call(Cursor cursor) {
-                        return Place.SELECT_ALL_MAPPER.map(cursor);
+                        return Place.MAPPER.map(cursor);
                     }
                 });
     }
@@ -43,14 +44,28 @@ public class PlacesLocalDataSource implements PlacesDataSource {
     @Override
     public void savePlace(@NonNull Place place) {
         SQLiteDatabase db = openHelper.getWritableDatabase();
-        Place.InsertRow insertRow = new Place.InsertRow(db);
-        insertRow.bind(place.title(), place.description(), place.phone());
 
-        database.executeInsert(Place.TABLE_NAME, insertRow.program);
+        Place.InsertRow placeInsertRow = new Place.InsertRow(db);
+        placeInsertRow.bind(place.title(), place.description(), place.phone());
+        database.executeInsert(Place.TABLE_NAME, placeInsertRow.program);
+
+        Address address = place.address();
+        if (address != null) {
+            Address.InsertRow addressInsertRow = new Address.InsertRow(db);
+            addressInsertRow.bind(
+                    place.id(),
+                    address.location(),
+                    address.street(),
+                    address.city(),
+                    address.post_code(),
+                    address.country()
+            );
+            database.executeInsert(Address.TABLE_NAME, addressInsertRow.program);
+        }
     }
 
-    @Override
-    public void refreshPlaces() {
-
+    public void removeAll() {
+        database.execute(Place.DELETEALL);
+        database.execute(Address.DELETEALL);
     }
 }

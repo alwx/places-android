@@ -1,0 +1,19 @@
+CREATE TABLE addresses (
+  id INTEGER NOT NULL PRIMARY KEY,
+  location TEXT,
+  street TEXT,
+  city TEXT,
+  post_code TEXT,
+  country TEXT
+);
+
+SelectAll:
+SELECT *
+FROM addresses;
+
+InsertRow:
+INSERT INTO addresses(id, location, street, city, post_code, country)
+VALUES (?, ?, ?, ?, ?, ?);
+
+DeleteAll:
+DELETE FROM addresses;

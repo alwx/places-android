@@ -1,32 +1,40 @@
 package me.alwx.places.data.models;
 
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.Cursor;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
-import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqldelight.RowMapper;
+
+import me.alwx.places.data.db.Db;
 
 @AutoValue
 public abstract class Place implements PlaceModel, Parcelable {
-    private static final Factory<Place> FACTORY = new Factory<>(new PlaceModel.Creator<Place>() {
-        @Override
-        public Place create(long _id,
-                            @NonNull String title,
-                            @NonNull String description,
-                            @NonNull String phone) {
-            return new AutoValue_Place(_id, title, description, phone);
-        }
-    });
+    public abstract Address address();
 
-    public static final RowMapper<Place> SELECT_ALL_MAPPER = FACTORY.selectAllMapper();
+    public static final RowMapper<Place> MAPPER = new RowMapper<Place>() {
+        @NonNull
+        @Override
+        public Place map(@NonNull Cursor cursor) {
+            long id = Db.getLong(cursor, ID);
+            String title = Db.getString(cursor, TITLE);
+            String description = Db.getString(cursor, DESCRIPTION);
+            String phone = Db.getString(cursor, PHONE);
+            Address address = Address.MAPPER.map(cursor);
+            return new AutoValue_Place(id, title, description, phone, address);
+        }
+    };
 
     public static String selectAll() {
-        return FACTORY.SelectAll().statement;
+        return String.format(
+                "SELECT * FROM %1$s JOIN %2$s ON (id = %2$s.%3$s);",
+                TABLE_NAME,
+                Address.TABLE_NAME,
+                Address.ID
+        );
     }
 
     public static TypeAdapter<Place> typeAdapter(Gson gson) {

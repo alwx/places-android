@@ -1,5 +1,5 @@
 CREATE TABLE places (
-  _id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   phone TEXT NOT NULL
@@ -7,7 +7,8 @@ CREATE TABLE places (
 
 SelectAll:
 SELECT *
-FROM places;
+FROM places
+JOIN addresses ON (id = addresses.id);
 
 InsertRow:
 INSERT INTO places(title, description, phone)

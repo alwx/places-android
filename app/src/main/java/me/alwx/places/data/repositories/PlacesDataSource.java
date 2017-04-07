@@ -16,6 +16,4 @@ public interface PlacesDataSource {
     Observable<List<Place>> getPlaces();
 
     void savePlace(@NonNull Place place);
-
-    void refreshPlaces();
 }

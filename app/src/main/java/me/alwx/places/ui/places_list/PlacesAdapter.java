@@ -13,6 +13,7 @@ import java.util.List;
 import me.alwx.places.R;
 import me.alwx.places.databinding.ItemPlaceBinding;
 import me.alwx.places.data.models.Place;
+import timber.log.Timber;
 
 /**
  * @author alwx
@@ -50,6 +51,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Place place = placeList.get(position);
+        Timber.d("Place: %s", place);
         /*holder.binding.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +59,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
             }
         });*/
         holder.binding.name.setText(place.title());
-        //holder.binding.address.setText(place.getAddress().toString());
+        holder.binding.address.setText(place.address().asString());
 
         //setDistance(place.getDistance(), holder.binding.distance);
     }

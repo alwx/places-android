@@ -1,98 +1,51 @@
 package me.alwx.places.data.models;
 
+import android.database.Cursor;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.squareup.sqldelight.RowMapper;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Address {
-    private String location;
-    private String street;
-    private String city;
-    @SerializedName("post_code")
-    private String postCode;
-    private String country;
+import me.alwx.places.data.db.Db;
 
-    public String getLocation() {
-        return location;
+@AutoValue
+public abstract class Address implements AddressModel, Parcelable {
+    public static final RowMapper<Address> MAPPER = new RowMapper<Address>() {
+        @NonNull
+        @Override
+        public Address map(@NonNull Cursor cursor) {
+            long id = Db.getLong(cursor, ID);
+            String location = Db.getString(cursor, LOCATION);
+            String street = Db.getString(cursor, STREET);
+            String city = Db.getString(cursor, CITY);
+            String post_code = Db.getString(cursor, POST_CODE);
+            String country = Db.getString(cursor, COUNTRY);
+            return new AutoValue_Address(id, location, street, city, post_code, country);
+        }
+    };
+
+    public static TypeAdapter<Address> typeAdapter(Gson gson) {
+        return new AutoValue_Address.GsonTypeAdapter(gson);
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    @Override
-    public String toString() {
+    public String asString() {
         List<String> list = new LinkedList<>();
 
-        addToList(list, getLocation());
-        addToList(list, getStreet());
-        addToList(list, getCity());
-        addToList(list, getPostCode());
-        addToList(list, getCountry());
+        addToList(list, location());
+        addToList(list, street());
+        addToList(list, city());
+        addToList(list, post_code());
+        addToList(list, country());
 
-        return TextUtils.join(",", list);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Address address = (Address) o;
-
-        if (location != null ? !location.equals(address.location) : address.location != null)
-            return false;
-        if (street != null ? !street.equals(address.street) : address.street != null) return false;
-        if (city != null ? !city.equals(address.city) : address.city != null) return false;
-        if (postCode != null ? !postCode.equals(address.postCode) : address.postCode != null)
-            return false;
-        return country != null ? country.equals(address.country) : address.country == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = location != null ? location.hashCode() : 0;
-        result = 31 * result + (street != null ? street.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (postCode != null ? postCode.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        return result;
+        return TextUtils.join(", ", list);
     }
 
     private void addToList(List<String> list, @Nullable String field) {
