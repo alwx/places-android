@@ -1,9 +1,7 @@
-package me.alwx.places.ui.fragments;
+package me.alwx.places.ui;
 
 import android.app.Fragment;
 import android.os.Bundle;
-
-import me.alwx.places.ui.activities.BaseActivity;
 
 /**
  * @author alwx (http://alwx.me)

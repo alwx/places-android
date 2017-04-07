@@ -1,4 +1,4 @@
-package me.alwx.places.ui.activities;
+package me.alwx.places.ui;
 
 import javax.inject.Scope;
 
@@ -8,5 +8,5 @@ import javax.inject.Scope;
  */
 
 @Scope
-public @interface ActivityScope {
+public @interface FragmentScope {
 }

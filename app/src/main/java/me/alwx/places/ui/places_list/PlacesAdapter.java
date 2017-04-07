@@ -1,4 +1,4 @@
-package me.alwx.places.ui.adapters;
+package me.alwx.places.ui.places_list;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,6 @@ import java.util.List;
 import me.alwx.places.R;
 import me.alwx.places.databinding.ItemPlaceBinding;
 import me.alwx.places.data.models.Place;
-import me.alwx.places.ui.fragments.PlacesListFragment;
 
 /**
  * @author alwx

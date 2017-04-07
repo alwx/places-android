@@ -1,10 +1,10 @@
 package me.alwx.places.di;
 
 import dagger.Subcomponent;
-import me.alwx.places.ui.activities.components.PlacesActivityComponent;
-import me.alwx.places.ui.activities.modules.PlacesActivityModule;
-import me.alwx.places.ui.fragments.components.PlacesListFragmentComponent;
-import me.alwx.places.ui.fragments.modules.PlacesListFragmentModule;
+import me.alwx.places.ui.places.PlacesActivityComponent;
+import me.alwx.places.ui.places.PlacesActivityModule;
+import me.alwx.places.ui.places_list.PlacesListFragmentComponent;
+import me.alwx.places.ui.places_list.PlacesListFragmentModule;
 
 @DataScope
 @Subcomponent(modules={ PlacesModule.class })

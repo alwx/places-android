@@ -1,4 +1,4 @@
-package me.alwx.places.ui.activities;
+package me.alwx.places.ui.places;
 
 import android.app.Fragment;
 import android.databinding.DataBindingUtil;
@@ -15,15 +15,14 @@ import javax.inject.Inject;
 
 import me.alwx.places.App;
 import me.alwx.places.R;
-import me.alwx.places.data.repositories.PlaceRepository;
+import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.databinding.ActivityMainBinding;
 import me.alwx.places.data.network.DefaultApiInterface;
 import me.alwx.places.data.network.GoogleApiInterface;
-import me.alwx.places.ui.activities.modules.PlacesActivityModule;
-import me.alwx.places.ui.presenters.PlacesActivityPresenter;
+import me.alwx.places.ui.BaseActivity;
 import me.alwx.places.ui.fragments.PlacesAboutFragment;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
-import me.alwx.places.ui.fragments.PlacesListFragment;
+import me.alwx.places.ui.places_list.PlacesListFragment;
 import timber.log.Timber;
 
 /**
@@ -41,7 +40,7 @@ public class PlacesActivity extends BaseActivity {
     GoogleApiClient googleApiClient;
 
     @Inject
-    PlaceRepository placeRepository;
+    PlacesRepository placesRepository;
 
     @Inject
     PlacesActivityPresenter presenter;

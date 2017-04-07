@@ -26,7 +26,7 @@ public final class NetworkModule {
     Gson provideGson() {
         return new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd")
-                .registerTypeAdapterFactory(MyAdapterFactory.create())
+                .registerTypeAdapterFactory(AutoValueTypeAdapterFactory.create())
                 .create();
     }
 

@@ -1,4 +1,4 @@
-package me.alwx.places.ui.activities;
+package me.alwx.places.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

@@ -6,8 +6,10 @@ import com.squareup.sqlbrite.BriteDatabase;
 
 import dagger.Module;
 import dagger.Provides;
-import me.alwx.places.data.repositories.PlaceRepository;
+import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.data.network.DefaultApiInterface;
+import me.alwx.places.data.repositories.local.PlacesLocalDataSource;
+import me.alwx.places.data.repositories.remote.PlacesRemoteDataSource;
 
 @Module
 public final class PlacesModule {
@@ -17,9 +19,13 @@ public final class PlacesModule {
 
     @Provides
     @DataScope
-    PlaceRepository providePlacesManager(DefaultApiInterface api,
-                                         BriteDatabase database,
-                                         SQLiteOpenHelper dbOpenHelper) {
-        return new PlaceRepository(api, database, dbOpenHelper);
+    PlacesRepository providePlacesManager(DefaultApiInterface api,
+                                          BriteDatabase database,
+                                          SQLiteOpenHelper openHelper) {
+
+        return new PlacesRepository(
+                new PlacesLocalDataSource(database, openHelper),
+                new PlacesRemoteDataSource(api)
+        );
     }
 }

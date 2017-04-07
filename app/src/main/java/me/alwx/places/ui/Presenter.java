@@ -1,4 +1,4 @@
-package me.alwx.places.ui.presenters;
+package me.alwx.places.ui;
 
 public interface Presenter {
     void onResume();

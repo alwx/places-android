@@ -1,8 +1,8 @@
-package me.alwx.places.ui.presenters;
+package me.alwx.places.ui.places;
 
 
-import me.alwx.places.data.repositories.PlaceRepository;
-import me.alwx.places.ui.activities.PlacesActivity;
+import me.alwx.places.data.repositories.PlacesRepository;
+import me.alwx.places.ui.Presenter;
 
 /**
  * @author alwx
@@ -10,12 +10,12 @@ import me.alwx.places.ui.activities.PlacesActivity;
  */
 public class PlacesActivityPresenter implements Presenter {
     private PlacesActivity activity;
-    private PlaceRepository placeRepository;
+    private PlacesRepository placesRepository;
 
     public PlacesActivityPresenter(PlacesActivity activity,
-                                   PlaceRepository placeRepository) {
+                                   PlacesRepository placesRepository) {
         this.activity = activity;
-        this.placeRepository = placeRepository;
+        this.placesRepository = placesRepository;
     }
 
     @Override
