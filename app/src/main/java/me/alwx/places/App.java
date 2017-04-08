@@ -7,11 +7,11 @@ import com.facebook.stetho.Stetho;
 
 import me.alwx.places.di.DaggerAppComponent;
 import me.alwx.places.di.PlacesComponent;
-import me.alwx.places.di.PlacesModule;
-import me.alwx.places.data.db.DbModule;
+import me.alwx.places.di.modules.PlacesModule;
+import me.alwx.places.di.modules.DbModule;
 import me.alwx.places.di.AppComponent;
-import me.alwx.places.di.AppModule;
-import me.alwx.places.data.network.NetworkModule;
+import me.alwx.places.di.modules.AppModule;
+import me.alwx.places.di.modules.NetworkModule;
 import timber.log.Timber;
 
 /**

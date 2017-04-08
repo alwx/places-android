@@ -1,6 +1,6 @@
 package me.alwx.places.data.network;
 
-import me.alwx.places.data.models.responses.GeocodeResponse;
+import me.alwx.places.data.models.gson.GeocodeResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

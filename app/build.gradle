@@ -1,32 +1,54 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.squareup.sqldelight'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
+    signingConfigs {
+        config {
+            try {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+            catch (e) {
+                throw new InvalidUserDataException("You should provide a keystore.properies file")
+            }
+        }
+    }
     dataBinding {
         enabled = true
     }
-
     defaultConfig {
-        applicationId "me.alwx.places"
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.config
     }
     productFlavors {
         prod {
+            applicationId "me.alwx.places"
             minSdkVersion 15
         }
         dev {
+            applicationId "me.alwx.places.dev"
             minSdkVersion 21
         }
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

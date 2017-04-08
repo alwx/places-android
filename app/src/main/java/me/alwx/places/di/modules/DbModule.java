@@ -1,4 +1,4 @@
-package me.alwx.places.data.db;
+package me.alwx.places.di.modules;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import me.alwx.places.data.db.DbOpenHelper;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -19,7 +20,7 @@ import timber.log.Timber;
  */
 
 @Module
-public class DbModule {
+public final class DbModule {
     private Application application;
 
     public DbModule(Application application) {

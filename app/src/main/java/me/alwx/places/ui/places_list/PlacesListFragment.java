@@ -2,6 +2,7 @@ package me.alwx.places.ui.places_list;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -19,6 +20,7 @@ import me.alwx.places.R;
 import me.alwx.places.data.models.Place;
 import me.alwx.places.ui.BaseFragment;
 import me.alwx.places.databinding.FragmentPlacesBinding;
+import me.alwx.places.ui.Presenter;
 
 /**
  * @author alwx
@@ -43,6 +45,10 @@ public class PlacesListFragment extends BaseFragment {
     @Inject
     SwipeRefreshLayout.OnRefreshListener onRefreshListener;
 
+    public static PlacesListFragment newInstance() {
+        return new PlacesListFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -61,14 +67,8 @@ public class PlacesListFragment extends BaseFragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         presenter.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        presenter.onDestroy();
-        super.onDestroy();
+        super.onPause();
     }
 
     @Override

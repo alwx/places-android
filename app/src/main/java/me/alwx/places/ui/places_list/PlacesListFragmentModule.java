@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.data.repositories.PlacesRepository;
-import me.alwx.places.ui.FragmentScope;
+import me.alwx.places.di.scopes.FragmentScope;
 
 @Module
 public class PlacesListFragmentModule {

@@ -1,9 +1,8 @@
 package me.alwx.places.ui.places;
 
 import dagger.Subcomponent;
-import me.alwx.places.ui.ActivityScope;
-import me.alwx.places.ui.places.PlacesActivity;
-import me.alwx.places.ui.places.PlacesActivityModule;
+import me.alwx.places.di.modules.LocationModule;
+import me.alwx.places.di.scopes.ActivityScope;
 
 @ActivityScope
 @Subcomponent(modules={ PlacesActivityModule.class })

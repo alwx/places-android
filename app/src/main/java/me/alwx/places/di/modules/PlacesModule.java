@@ -1,4 +1,4 @@
-package me.alwx.places.di;
+package me.alwx.places.di.modules;
 
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -10,13 +10,10 @@ import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.data.network.DefaultApiInterface;
 import me.alwx.places.data.repositories.local.PlacesLocalDataSource;
 import me.alwx.places.data.repositories.remote.PlacesRemoteDataSource;
+import me.alwx.places.di.scopes.DataScope;
 
 @Module
 public final class PlacesModule {
-    public PlacesModule() {
-
-    }
-
     @Provides
     @DataScope
     PlacesRepository providePlacesManager(DefaultApiInterface api,

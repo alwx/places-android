@@ -1,4 +1,4 @@
-package me.alwx.places.data.models.responses;
+package me.alwx.places.data.models.gson;
 
 import java.util.List;
 

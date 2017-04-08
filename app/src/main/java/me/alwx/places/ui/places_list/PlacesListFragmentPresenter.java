@@ -1,5 +1,7 @@
 package me.alwx.places.ui.places_list;
 
+import android.os.Bundle;
+
 import java.util.List;
 
 import me.alwx.places.data.models.Place;
@@ -19,7 +21,7 @@ import timber.log.Timber;
  * @version 1.0
  */
 
-public class PlacesListFragmentPresenter implements Presenter {
+public class PlacesListFragmentPresenter {
     private PlacesListFragment fragment;
     private PlacesRepository placesRepository;
 
@@ -33,31 +35,20 @@ public class PlacesListFragmentPresenter implements Presenter {
         this.subscriptions = new CompositeSubscription();
     }
 
-    @Override
-    public void onResume() {
+    void onResume() {
         fragment.initializePlaceList();
         loadPlaces(false);
     }
 
-    @Override
-    public void onPause() {
+    void onPause() {
         subscriptions.clear();
     }
 
-    @Override
-    public void onDestroy() {
-
-    }
-
-    public void loadPlaces(boolean forceUpdate) {
+    void loadPlaces(boolean forceUpdate) {
         loadPlaces(forceUpdate || firstLoad, true);
         firstLoad = false;
     }
 
-    /**
-     * @param forceUpdate   Pass in true to refresh the data in the {@link PlacesRepository}
-     * @param showLoadingUI Pass in true to display a loading icon in the UI
-     */
     private void loadPlaces(final boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
             fragment.changeLoadingState(true);

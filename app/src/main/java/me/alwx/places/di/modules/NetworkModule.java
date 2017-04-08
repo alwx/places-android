@@ -1,4 +1,4 @@
-package me.alwx.places.data.network;
+package me.alwx.places.di.modules;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
@@ -9,6 +9,9 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.BuildConfig;
+import me.alwx.places.data.network.AutoValueTypeAdapterFactory;
+import me.alwx.places.data.network.DefaultApiInterface;
+import me.alwx.places.data.network.GoogleApiInterface;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

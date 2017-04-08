@@ -1,4 +1,4 @@
-package me.alwx.places.di;
+package me.alwx.places.di.scopes;
 
 import javax.inject.Scope;
 
@@ -8,5 +8,5 @@ import javax.inject.Scope;
  */
 
 @Scope
-public @interface DataScope {
+public @interface FragmentScope {
 }

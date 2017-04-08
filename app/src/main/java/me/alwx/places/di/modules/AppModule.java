@@ -1,6 +1,7 @@
-package me.alwx.places.di;
+package me.alwx.places.di.modules;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -9,7 +10,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import me.alwx.places.data.db.DbModule;
 
 /**
  * @author alwx
@@ -17,22 +17,22 @@ import me.alwx.places.data.db.DbModule;
  */
 @Module
 public final class AppModule {
-    private Application application;
+    private Context context;
 
-    public AppModule(Application application) {
-        this.application = application;
+    public AppModule(Context context) {
+        this.context = context;
     }
 
     @Provides
     @Singleton
-    Application provideApplication() {
-        return application;
+    Context provideContext() {
+        return context;
     }
 
     @Provides
     @Singleton
     GoogleApiClient provideGoogleApiClient() {
-        return new GoogleApiClient.Builder(application)
+        return new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API)
                 .build();
     }
