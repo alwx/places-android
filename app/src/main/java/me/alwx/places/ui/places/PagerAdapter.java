@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import me.alwx.places.ui.BaseFragment;
+import me.alwx.places.ui.places_about.PlacesAboutFragment;
 import me.alwx.places.ui.places_list.PlacesListFragment;
 import me.alwx.places.ui.places_map.PlacesMapFragment;
 
@@ -14,7 +15,7 @@ import me.alwx.places.ui.places_map.PlacesMapFragment;
  */
 
 class PagerAdapter extends FragmentStatePagerAdapter {
-    public static final int PAGES_COUNT = 2;
+    static final int PAGES_COUNT = 3;
 
     PagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,6 +29,8 @@ class PagerAdapter extends FragmentStatePagerAdapter {
                 return PlacesListFragment.newInstance();
             case 1:
                 return PlacesMapFragment.newInstance();
+            case 2:
+                return PlacesAboutFragment.newInstance();
         }
     }
 

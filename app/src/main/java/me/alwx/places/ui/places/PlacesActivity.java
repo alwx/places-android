@@ -38,7 +38,7 @@ public class PlacesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        presenter.onCreate(savedInstanceState);
+        presenter.onCreate();
         binding.pager.setAdapter(pagerAdapter);
     }
 

@@ -2,7 +2,6 @@ package me.alwx.places.ui.places_map;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import me.alwx.places.App;
 import me.alwx.places.R;
 import me.alwx.places.databinding.FragmentMapBinding;
 import me.alwx.places.ui.BaseFragment;
-import me.alwx.places.ui.Presenter;
 
 /**
  * @author alwx
@@ -47,6 +45,18 @@ public class PlacesMapFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        presenter.onPause();
+        super.onPause();
     }
 
     public void onDestroy() {

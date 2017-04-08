@@ -1,4 +1,4 @@
-package me.alwx.places.ui.fragments;
+package me.alwx.places.ui.places_about;
 
 import android.app.Fragment;
 import android.databinding.DataBindingUtil;
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import me.alwx.places.R;
 import me.alwx.places.databinding.FragmentAboutBinding;
+import me.alwx.places.ui.places_list.PlacesListFragment;
 
 /**
  * @author alwx
@@ -18,6 +19,10 @@ import me.alwx.places.databinding.FragmentAboutBinding;
 
 public class PlacesAboutFragment extends Fragment {
     private FragmentAboutBinding binding;
+
+    public static PlacesListFragment newInstance() {
+        return new PlacesListFragment();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

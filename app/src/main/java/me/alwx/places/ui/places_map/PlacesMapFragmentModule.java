@@ -7,7 +7,8 @@ import dagger.Provides;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.di.scopes.FragmentScope;
 import me.alwx.places.utils.EventBus;
-import me.alwx.places.utils.PermissionsRequester;
+import me.alwx.places.utils.LocationUtils;
+import me.alwx.places.utils.PermissionsUtils;
 
 @Module
 public class PlacesMapFragmentModule {
@@ -22,13 +23,15 @@ public class PlacesMapFragmentModule {
     PlacesMapFragmentPresenter providePresenter(PlacesRepository placesRepository,
                                                 GoogleApiClient apiClient,
                                                 EventBus eventBus,
-                                                PermissionsRequester requester) {
+                                                PermissionsUtils permissionsUtils,
+                                                LocationUtils locationUtils) {
         return new PlacesMapFragmentPresenter.Builder()
                 .setFragment(fragment)
                 .setPlacesRepository(placesRepository)
                 .setApiClient(apiClient)
                 .setEventBus(eventBus)
-                .setPermissionsRequester(requester)
+                .setPermissionsUtils(permissionsUtils)
+                .setLocationUtils(locationUtils)
                 .build();
     }
 }

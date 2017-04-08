@@ -10,6 +10,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import me.alwx.places.di.scopes.DataScope;
+import me.alwx.places.utils.EventBus;
+import me.alwx.places.utils.PermissionsUtils;
 
 /**
  * @author alwx
@@ -31,9 +34,22 @@ public final class AppModule {
 
     @Provides
     @Singleton
+    EventBus provideEventBus() {
+        return new EventBus();
+    }
+
+    @Provides
+    @Singleton
     GoogleApiClient provideGoogleApiClient() {
         return new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    PermissionsUtils providePermissionsUtils(Context context,
+                                             EventBus eventBus) {
+        return new PermissionsUtils(context, eventBus);
     }
 }

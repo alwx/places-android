@@ -1,5 +1,6 @@
 package me.alwx.places.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,25 +18,25 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  * @version 1.0
  */
 
-public class PermissionsRequester {
+public class PermissionsUtils {
     private static final int PERMISSIONS_REQUEST = 1;
+
+    public static final String[] LOCATION_PERMISSIONS = new String[]{
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+    };
 
     private Context context;
     private EventBus eventBus;
 
-    private Bundle state;
-
-    public PermissionsRequester(Context context,
-                                EventBus eventBus) {
+    public PermissionsUtils(Context context,
+                            EventBus eventBus) {
         this.context = context;
         this.eventBus = eventBus;
     }
 
     public void requestPermissions(@NonNull final Activity activity,
-                                   Bundle savedInstanceState,
                                    @NonNull final String[] permissions) {
-        state = savedInstanceState;
-
         checkPermissions(permissions).subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean granted) {
@@ -69,10 +70,6 @@ public class PermissionsRequester {
                 eventBus.addEvent(new PermissionsGrantedEvent());
                 break;
         }
-    }
-
-    public Bundle getState() {
-        return state;
     }
 
     private boolean isPermissionGranted(@NonNull String permission) {

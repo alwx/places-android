@@ -3,24 +3,14 @@ package me.alwx.places.ui.places;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 
 import me.alwx.places.R;
-import me.alwx.places.data.repositories.PlacesRepository;
-import me.alwx.places.ui.Presenter;
-import me.alwx.places.ui.places_map.PlacesMapFragmentPresenter;
-import me.alwx.places.utils.EventBus;
-import me.alwx.places.utils.PermissionsRequester;
-import rx.functions.Func0;
+import me.alwx.places.utils.PermissionsUtils;
 
 /**
  * @author alwx
@@ -30,27 +20,26 @@ public class PlacesActivityPresenter {
 
     private PlacesActivity activity;
     private GoogleApiClient apiClient;
-    private PermissionsRequester permissionsRequester;
+    private PermissionsUtils permissionsUtils;
 
     PlacesActivityPresenter(PlacesActivity activity,
                             GoogleApiClient apiClient,
-                            PermissionsRequester permissionsRequester) {
+                            PermissionsUtils permissionsUtils) {
         this.activity = activity;
         this.apiClient = apiClient;
-        this.permissionsRequester = permissionsRequester;
+        this.permissionsUtils = permissionsUtils;
     }
 
     void onRequestPermissionsResult(int requestCode,
                                     String[] permissions,
                                     int[] grantResults) {
-        permissionsRequester.onRequestResult(requestCode, permissions, grantResults);
+        permissionsUtils.onRequestResult(requestCode, permissions, grantResults);
     }
 
-    void onCreate(Bundle savedInstanceState) {
+    void onCreate() {
         initBottomBar();
-        permissionsRequester.requestPermissions(
+        permissionsUtils.requestPermissions(
                 activity,
-                savedInstanceState,
                 new String[]{
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
@@ -86,45 +75,5 @@ public class PlacesActivityPresenter {
                     }
                 }
         );
-    }
-
-    private void initMap() {
-        Handler initMapHandler = new Handler();
-        Runnable initMapRunnable = new Runnable() {
-            @Override
-            public void run() {
-                initMapAsync(permissionsRequester.getState());
-            }
-        };
-        initMapHandler.post(initMapRunnable);
-    }
-
-    private void initMapAsync(final Bundle state) {
-        /*fragment.initMap(state, new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                PlacesMapFragmentPresenter.this.googleMap = googleMap;
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-                if (isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) ||
-                        isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                    // noinspection MissingPermission
-                    googleMap.setMyLocationEnabled(true);
-
-                    requestLocation();
-                }
-
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
-                        if (location != null) {
-                            animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                        }
-                    }
-                });
-            }
-        });
-
-        MapsInitializer.initialize(fragment.getActivity());*/
     }
 }

@@ -1,14 +1,10 @@
 package me.alwx.places.ui.places_map;
 
-import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,8 +13,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.utils.EventBus;
-import me.alwx.places.utils.PermissionsRequester;
-import me.alwx.places.utils.PermissionsRequester.PermissionsGrantedEvent;
+import me.alwx.places.utils.LocationUtils;
+import me.alwx.places.utils.LocationUtils.LocationChangedEvent;
+import me.alwx.places.utils.PermissionsUtils;
+import me.alwx.places.utils.PermissionsUtils.PermissionsGrantedEvent;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -32,26 +30,35 @@ public class PlacesMapFragmentPresenter {
     private PlacesRepository placesRepository;
     private GoogleApiClient apiClient;
     private EventBus eventBus;
-    private PermissionsRequester permissionsRequester;
+    private PermissionsUtils permissionsUtils;
+    private LocationUtils locationUtils;
 
     private Bundle state;
     private Subscription eventBusSubscription;
 
     private GoogleMap googleMap;
-    private Location location;
 
     private PlacesMapFragmentPresenter(Builder builder) {
         this.fragment = builder.fragment;
         this.placesRepository = builder.placesRepository;
         this.apiClient = builder.apiClient;
         this.eventBus = builder.eventBus;
-        this.permissionsRequester = builder.permissionsRequester;
+        this.permissionsUtils = builder.permissionsUtils;
+        this.locationUtils = builder.locationUtils;
     }
 
     void onCreate(Bundle state) {
         this.state = state;
         subscribeToEvents();
+    }
+
+    void onResume() {
+        locationUtils.requestLocationUpdates();
         initMap();
+    }
+
+    void onPause() {
+        locationUtils.stopLocationUpdates();
     }
 
     void onDestroy() {
@@ -67,6 +74,13 @@ public class PlacesMapFragmentPresenter {
             public void call(Object o) {
                 if (o instanceof PermissionsGrantedEvent) {
                     initMap();
+                    locationUtils.requestLocationUpdates();
+                }
+                else if (o instanceof LocationChangedEvent) {
+                    Location location = ((LocationChangedEvent) o).getLocation();
+                    if (location != null) {
+                        animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
+                    }
                 }
             }
         });
@@ -88,20 +102,16 @@ public class PlacesMapFragmentPresenter {
             @Override
             public void onMapReady(GoogleMap map) {
                 googleMap = map;
-                googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-                permissionsRequester
-                        .checkPermissions(new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION
-                        })
+                permissionsUtils
+                        .checkPermissions(PermissionsUtils.LOCATION_PERMISSIONS)
                         .subscribe(new Action1<Boolean>() {
                             @Override
                             public void call(Boolean granted) {
                                 if (granted) {
                                     // noinspection MissingPermission
                                     googleMap.setMyLocationEnabled(true);
-                                    requestLocation();
+                                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                                 }
                             }
                         });
@@ -109,37 +119,14 @@ public class PlacesMapFragmentPresenter {
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        if (location != null) {
+                        /*if (location != null) {
                             animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                        }
+                        }*/
                         //showPlacesFromDatabase();
                     }
                 });
             }
         });
-    }
-
-    private void requestLocation() {
-        // noinspection MissingPermission
-        location = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-
-        if (location == null) {
-            LocationRequest request = LocationRequest.create();
-            request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-            request.setNumUpdates(1);
-
-            // noinspection MissingPermission
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    apiClient,
-                    request,
-                    new LocationListener() {
-                        @Override
-                        public void onLocationChanged(Location location) {
-                            PlacesMapFragmentPresenter.this.location = location;
-                        }
-                    }
-            );
-        }
     }
 
     private void animateTo(LatLng latLng) {
@@ -152,7 +139,8 @@ public class PlacesMapFragmentPresenter {
         private PlacesRepository placesRepository;
         private GoogleApiClient apiClient;
         private EventBus eventBus;
-        private PermissionsRequester permissionsRequester;
+        private PermissionsUtils permissionsUtils;
+        private LocationUtils locationUtils;
 
         Builder setFragment(PlacesMapFragment fragment) {
             this.fragment = fragment;
@@ -174,8 +162,13 @@ public class PlacesMapFragmentPresenter {
             return this;
         }
 
-        Builder setPermissionsRequester(PermissionsRequester requester) {
-            this.permissionsRequester = requester;
+        Builder setPermissionsUtils(PermissionsUtils requester) {
+            this.permissionsUtils = requester;
+            return this;
+        }
+
+        Builder setLocationUtils(LocationUtils locationUtils) {
+            this.locationUtils = locationUtils;
             return this;
         }
 

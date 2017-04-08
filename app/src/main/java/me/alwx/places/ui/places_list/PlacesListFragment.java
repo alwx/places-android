@@ -20,7 +20,6 @@ import me.alwx.places.R;
 import me.alwx.places.data.models.Place;
 import me.alwx.places.ui.BaseFragment;
 import me.alwx.places.databinding.FragmentPlacesBinding;
-import me.alwx.places.ui.Presenter;
 
 /**
  * @author alwx

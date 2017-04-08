@@ -1,12 +1,13 @@
 package me.alwx.places.di.modules;
 
-import android.content.Context;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.di.scopes.DataScope;
 import me.alwx.places.utils.EventBus;
-import me.alwx.places.utils.PermissionsRequester;
+import me.alwx.places.utils.LocationUtils;
+import me.alwx.places.utils.PermissionsUtils;
 
 /**
  * @author alwx
@@ -17,8 +18,9 @@ import me.alwx.places.utils.PermissionsRequester;
 public final class LocationModule {
     @DataScope
     @Provides
-    PermissionsRequester providePermissionsRequester(Context context,
-                                                     EventBus eventBus) {
-        return new PermissionsRequester(context, eventBus);
+    LocationUtils provideLocationUtils(EventBus eventBus,
+                                       GoogleApiClient apiClient,
+                                       PermissionsUtils permissionsUtils) {
+        return new LocationUtils(eventBus, apiClient, permissionsUtils);
     }
 }
