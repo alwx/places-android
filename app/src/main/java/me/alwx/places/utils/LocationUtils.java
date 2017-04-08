@@ -1,5 +1,6 @@
 package me.alwx.places.utils;
 
+import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +11,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import rx.Observable;
 import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 /**
  * @author alwx
@@ -18,7 +21,6 @@ import rx.functions.Action1;
  */
 
 public class LocationUtils {
-    private EventBus eventBus;
     private GoogleApiClient apiClient;
     private PermissionsUtils permissionsUtils;
 
@@ -27,7 +29,7 @@ public class LocationUtils {
         public void onConnected(@Nullable Bundle bundle) {
             // noinspection MissingPermission
             Location location = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-            eventBus.addEvent(new LocationChangedEvent(location));
+            subject.onNext(location);
 
             LocationRequest request = LocationRequest.create();
             request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -40,7 +42,7 @@ public class LocationUtils {
                     new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
-                            eventBus.addEvent(new LocationChangedEvent(location));
+                            subject.onNext(location);
                         }
                     }
             );
@@ -51,18 +53,20 @@ public class LocationUtils {
             // do nothing
         }
     };
+    private PublishSubject<Location> subject = PublishSubject.create();
 
-    public LocationUtils(EventBus eventBus,
-                         GoogleApiClient apiClient,
+    public LocationUtils(GoogleApiClient apiClient,
                          PermissionsUtils permissionsUtils) {
-        this.eventBus = eventBus;
         this.apiClient = apiClient;
         this.permissionsUtils = permissionsUtils;
     }
 
-    public void requestLocationUpdates() {
+    public void startReceivingUpdates() {
         permissionsUtils
-                .checkPermissions(PermissionsUtils.LOCATION_PERMISSIONS)
+                .checkPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                )
                 .subscribe(new Action1<Boolean>() {
                     @Override
                     public void call(Boolean isGranted) {
@@ -73,19 +77,11 @@ public class LocationUtils {
                 });
     }
 
-    public void stopLocationUpdates() {
+    public void stopReceivingUpdates() {
         apiClient.unregisterConnectionCallbacks(connectionCallbacks);
     }
 
-    public class LocationChangedEvent {
-        private Location location;
-
-        LocationChangedEvent(Location location) {
-            this.location = location;
-        }
-
-        public Location getLocation() {
-            return location;
-        }
+    public Observable<Location> getLocation() {
+        return subject;
     }
 }

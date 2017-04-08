@@ -5,7 +5,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.di.scopes.DataScope;
-import me.alwx.places.utils.EventBus;
 import me.alwx.places.utils.LocationUtils;
 import me.alwx.places.utils.PermissionsUtils;
 
@@ -18,9 +17,8 @@ import me.alwx.places.utils.PermissionsUtils;
 public final class LocationModule {
     @DataScope
     @Provides
-    LocationUtils provideLocationUtils(EventBus eventBus,
-                                       GoogleApiClient apiClient,
+    LocationUtils provideLocationUtils(GoogleApiClient apiClient,
                                        PermissionsUtils permissionsUtils) {
-        return new LocationUtils(eventBus, apiClient, permissionsUtils);
+        return new LocationUtils(apiClient, permissionsUtils);
     }
 }

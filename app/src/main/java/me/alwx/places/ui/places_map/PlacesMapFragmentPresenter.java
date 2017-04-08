@@ -1,5 +1,6 @@
 package me.alwx.places.ui.places_map;
 
+import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +13,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import me.alwx.places.data.repositories.PlacesRepository;
-import me.alwx.places.utils.EventBus;
 import me.alwx.places.utils.LocationUtils;
-import me.alwx.places.utils.LocationUtils.LocationChangedEvent;
 import me.alwx.places.utils.PermissionsUtils;
-import me.alwx.places.utils.PermissionsUtils.PermissionsGrantedEvent;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -28,21 +26,19 @@ import rx.functions.Action1;
 public class PlacesMapFragmentPresenter {
     private PlacesMapFragment fragment;
     private PlacesRepository placesRepository;
-    private GoogleApiClient apiClient;
-    private EventBus eventBus;
     private PermissionsUtils permissionsUtils;
     private LocationUtils locationUtils;
 
     private Bundle state;
-    private Subscription eventBusSubscription;
 
     private GoogleMap googleMap;
+
+    private Subscription permissionSubscription;
+    private Subscription locationSubscription;
 
     private PlacesMapFragmentPresenter(Builder builder) {
         this.fragment = builder.fragment;
         this.placesRepository = builder.placesRepository;
-        this.apiClient = builder.apiClient;
-        this.eventBus = builder.eventBus;
         this.permissionsUtils = builder.permissionsUtils;
         this.locationUtils = builder.locationUtils;
     }
@@ -53,34 +49,40 @@ public class PlacesMapFragmentPresenter {
     }
 
     void onResume() {
-        locationUtils.requestLocationUpdates();
+        locationUtils.startReceivingUpdates();
         initMap();
     }
 
     void onPause() {
-        locationUtils.stopLocationUpdates();
+        locationUtils.stopReceivingUpdates();
     }
 
     void onDestroy() {
-        if (eventBusSubscription != null) {
-            eventBusSubscription.unsubscribe();
-            eventBusSubscription = null;
+        if (permissionSubscription != null) {
+            permissionSubscription.unsubscribe();
+            permissionSubscription = null;
+        }
+        if (locationSubscription != null) {
+            locationSubscription.unsubscribe();
+            locationSubscription = null;
         }
     }
 
     private void subscribeToEvents() {
-        eventBus.getEvents().subscribe(new Action1<Object>() {
-            @Override
-            public void call(Object o) {
-                if (o instanceof PermissionsGrantedEvent) {
-                    initMap();
-                    locationUtils.requestLocationUpdates();
-                }
-                else if (o instanceof LocationChangedEvent) {
-                    Location location = ((LocationChangedEvent) o).getLocation();
-                    if (location != null) {
-                        animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
+        permissionSubscription = permissionsUtils.getRequestResults().subscribe(
+                new Action1<String[]>() {
+                    @Override
+                    public void call(String[] strings) {
+                        initMap();
+                        locationUtils.startReceivingUpdates();
                     }
+                }
+        );
+        locationSubscription = locationUtils.getLocation().subscribe(new Action1<Location>() {
+            @Override
+            public void call(Location location) {
+                if (location != null) {
+                    animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
                 }
             }
         });
@@ -104,7 +106,10 @@ public class PlacesMapFragmentPresenter {
                 googleMap = map;
 
                 permissionsUtils
-                        .checkPermissions(PermissionsUtils.LOCATION_PERMISSIONS)
+                        .checkPermissions(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                        )
                         .subscribe(new Action1<Boolean>() {
                             @Override
                             public void call(Boolean granted) {
@@ -137,8 +142,6 @@ public class PlacesMapFragmentPresenter {
     static class Builder {
         private PlacesMapFragment fragment;
         private PlacesRepository placesRepository;
-        private GoogleApiClient apiClient;
-        private EventBus eventBus;
         private PermissionsUtils permissionsUtils;
         private LocationUtils locationUtils;
 
@@ -149,16 +152,6 @@ public class PlacesMapFragmentPresenter {
 
         Builder setPlacesRepository(PlacesRepository repository) {
             this.placesRepository = repository;
-            return this;
-        }
-
-        Builder setApiClient(GoogleApiClient apiClient) {
-            this.apiClient = apiClient;
-            return this;
-        }
-
-        Builder setEventBus(EventBus eventBus) {
-            this.eventBus = eventBus;
             return this;
         }
 

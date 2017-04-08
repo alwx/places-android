@@ -9,7 +9,6 @@ import me.alwx.places.di.modules.AppModule;
 import me.alwx.places.di.modules.DbModule;
 import me.alwx.places.di.modules.NetworkModule;
 import me.alwx.places.di.modules.PlacesModule;
-import me.alwx.places.utils.EventBus;
 
 /**
  * @author alwx
