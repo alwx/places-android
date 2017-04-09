@@ -160,8 +160,6 @@ public class PlacesRepository {
                 .flatMap(new Func1<GeocodeResponse, Observable<Geodata>>() {
                     @Override
                     public Observable<Geodata> call(GeocodeResponse resp) {
-                        localDataSource.removeGeodata();
-
                         Geodata geodata = Geodata.builder()
                                 .setId(place.id())
                                 .setLatitude(resp.getLat())
@@ -184,7 +182,7 @@ public class PlacesRepository {
      *
      * @return the new {@link Observable} instance
      */
-    public Observable<List<Geodata>> getGeodata() {
+    public Observable<List<Geodata>> getLocalGeodata() {
         return localDataSource
                 .getGeodata()
                 .flatMap(new Func1<List<Geodata>, Observable<List<Geodata>>>() {

@@ -10,7 +10,7 @@ SELECT *
 FROM geodata;
 
 InsertRow:
-INSERT INTO geodata(id, latitude, longitude)
+INSERT OR REPLACE INTO geodata(id, latitude, longitude)
 VALUES (?, ?, ?);
 
 DeleteAll:

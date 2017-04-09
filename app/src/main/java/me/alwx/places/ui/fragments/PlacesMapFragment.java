@@ -103,7 +103,6 @@ public class PlacesMapFragment extends BaseFragment {
      * @param placeList list of {@link Place} objects
      */
     public void initPager(List<Place> placeList) {
-        binding.pager.setAdapter(adapter);
         adapter.setPlaceList(placeList);
     }
 
@@ -154,6 +153,9 @@ public class PlacesMapFragment extends BaseFragment {
      * @param id item id
      */
     public void pagerNavigateTo(long id) {
+        if (binding.pager.getAdapter() == null) {
+            binding.pager.setAdapter(adapter);
+        }
         int position = adapter.getPosition(id);
         if (position != -1) {
             binding.pager.setCurrentItem(position);

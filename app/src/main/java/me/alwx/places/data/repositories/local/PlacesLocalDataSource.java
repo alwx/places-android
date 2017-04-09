@@ -111,11 +111,4 @@ public class PlacesLocalDataSource {
         database.execute(Place.DELETEALL);
         database.execute(Address.DELETEALL);
     }
-
-    /**
-     * Removes geodata from the local SQLite database.
-     */
-    public void removeGeodata() {
-        database.execute(Geodata.DELETEALL);
-    }
 }

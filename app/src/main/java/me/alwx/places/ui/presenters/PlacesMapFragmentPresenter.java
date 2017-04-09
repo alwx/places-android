@@ -43,6 +43,7 @@ public class PlacesMapFragmentPresenter {
 
     private Bundle state;
     private GoogleMap googleMap;
+    private Location location;
     private List<Marker> markerList = new ArrayList<>();
 
     private CompositeSubscription moduleSubscriptions = new CompositeSubscription();
@@ -114,10 +115,8 @@ public class PlacesMapFragmentPresenter {
                 .subscribe(new Action1<Location>() {
                     @Override
                     public void call(Location location) {
+                        PlacesMapFragmentPresenter.this.location = location;
                         fragment.setAdapterLocation(location);
-                        if (location != null) {
-                            animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                        }
                     }
                 });
         Subscription pageNavigatorSubscription = pageInteractor
@@ -195,6 +194,10 @@ public class PlacesMapFragmentPresenter {
             @Override
             public void onMapLoaded() {
                 loadPlaces();
+
+                if (location != null) {
+                    animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
+                }
             }
         });
     }
@@ -208,7 +211,7 @@ public class PlacesMapFragmentPresenter {
     private void loadPlaces() {
         dataSubscriptions.clear();
 
-        Subscription geodataSubscription = placesRepository.getGeodata()
+        Subscription geodataSubscription = placesRepository.getLocalGeodata()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Geodata>>() {

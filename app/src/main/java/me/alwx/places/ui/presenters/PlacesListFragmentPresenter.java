@@ -80,7 +80,7 @@ public class PlacesListFragmentPresenter {
         loadSubscriptions.clear();
 
         Subscription geodataSubscription = placesRepository
-                .getGeodata()
+                .getLocalGeodata()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<List<Geodata>>() {
