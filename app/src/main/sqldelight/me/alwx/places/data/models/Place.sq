@@ -1,5 +1,5 @@
 CREATE TABLE places (
-  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   phone TEXT NOT NULL
@@ -11,8 +11,8 @@ FROM places
 JOIN addresses ON (id = addresses.id);
 
 InsertRow:
-INSERT INTO places(title, description, phone)
-VALUES (?, ?, ?);
+INSERT INTO places(id, title, description, phone)
+VALUES (?, ?, ?, ?);
 
 DeleteAll:
 DELETE FROM places;

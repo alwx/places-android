@@ -1,0 +1,16 @@
+CREATE TABLE geodata (
+    id INTEGER NOT NULL PRIMARY KEY,
+    latitude REAL AS Float,
+    longitude REAL AS Float
+);
+
+SelectAll:
+SELECT *
+FROM geodata;
+
+InsertRow:
+INSERT INTO geodata(id, latitude, longitude)
+VALUES (?, ?, ?);
+
+DeleteAll:
+DELETE FROM geodata;

@@ -9,6 +9,7 @@ import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.di.scopes.FragmentScope;
+import me.alwx.places.utils.LocationUtils;
 
 @Module
 public class PlacesListFragmentModule {
@@ -20,8 +21,9 @@ public class PlacesListFragmentModule {
 
     @Provides
     @FragmentScope
-    PlacesListFragmentPresenter providePresenter(PlacesRepository placesRepository) {
-        return new PlacesListFragmentPresenter(fragment, placesRepository);
+    PlacesListFragmentPresenter providePresenter(PlacesRepository placesRepository,
+                                                 LocationUtils locationUtils) {
+        return new PlacesListFragmentPresenter(fragment, placesRepository, locationUtils);
     }
 
     @Provides

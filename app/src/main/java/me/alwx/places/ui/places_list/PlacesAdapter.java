@@ -1,7 +1,10 @@
 package me.alwx.places.ui.places_list;
 
 import android.databinding.DataBindingUtil;
+import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.alwx.places.R;
+import me.alwx.places.data.models.Geodata;
 import me.alwx.places.databinding.ItemPlaceBinding;
 import me.alwx.places.data.models.Place;
-import timber.log.Timber;
 
 /**
  * @author alwx
@@ -22,10 +25,13 @@ import timber.log.Timber;
 
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder> {
     private PlacesListFragment fragment;
-    private List<Place> placeList = new ArrayList<>();
     private OnClickListener onClickListener;
 
-    public PlacesAdapter(PlacesListFragment fragment) {
+    private List<Place> placeList = new ArrayList<>();
+    private LongSparseArray<Geodata> geodataArray = new LongSparseArray<>();
+    private Location location;
+
+    PlacesAdapter(PlacesListFragment fragment) {
         this.fragment = fragment;
     }
     
@@ -38,9 +44,21 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
         return new ViewHolder(v);
     }
 
-    public void setPlaceList(List<Place> placeList) {
+    void setPlaceList(List<Place> placeList) {
         this.placeList = placeList;
         notifyDataSetChanged();
+    }
+
+    void setGeodataList(List<Geodata> geodataList) {
+        geodataArray = new LongSparseArray<>();
+        for (Geodata geodata : geodataList) {
+            geodataArray.append(geodata.id(), geodata);
+        }
+        notifyDataSetChanged();
+    }
+
+    void setLocation(Location location) {
+        this.location = location;
     }
     
     @Override
@@ -51,7 +69,6 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Place place = placeList.get(position);
-        Timber.d("Place: %s", place);
         /*holder.binding.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,10 +78,16 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
         holder.binding.name.setText(place.title());
         holder.binding.address.setText(place.address().asString());
 
-        //setDistance(place.getDistance(), holder.binding.distance);
+        bindDistance(
+                holder.binding.distance,
+                Geodata.calculateDistance(
+                        geodataArray.get(place.id()),
+                        location
+                )
+        );
     }
 
-    private void setDistance(double distance, final TextView distanceView) {
+    private void bindDistance(@NonNull TextView distanceView, double distance) {
         if (distance == -1d) {
             distanceView.setText("");
         } else if (distance >= 1000) {

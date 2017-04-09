@@ -5,18 +5,26 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import me.alwx.places.data.models.Place;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.utils.LocationUtils;
 import me.alwx.places.utils.PermissionsUtils;
+import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * @author alwx
@@ -124,10 +132,7 @@ public class PlacesMapFragmentPresenter {
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        /*if (location != null) {
-                            animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                        }*/
-                        //showPlacesFromDatabase();
+                        loadPlaces();
                     }
                 });
             }
@@ -137,6 +142,45 @@ public class PlacesMapFragmentPresenter {
     private void animateTo(LatLng latLng) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 11);
         googleMap.animateCamera(cameraUpdate);
+    }
+
+    private void loadPlaces() {
+        Subscription subscription = placesRepository
+                .getPlaces()
+                .flatMap(new Func1<List<Place>, Observable<Place>>() {
+                    @Override
+                    public Observable<Place> call(List<Place> places) {
+                        return Observable.from(places);
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Place>>() {
+                    @Override
+                    public void call(List<Place> places) {
+                        if (googleMap == null) {
+                            return;
+                        }
+                        googleMap.clear();
+
+                        List<Marker> markerList = new ArrayList<>();
+                        for (int i = 0; i < places.size(); i++) {
+                            Place p = places.get(i);
+                            /*markerList.add(
+                                    googleMap.addMarker(
+                                            new MarkerOptions()
+                                                    .position(new LatLng(p.getLat(), p.getLng()))
+                                                    .title(String.valueOf(i))
+                                    )
+                            );*/
+                        }
+
+                        if (markerList.size() > 0) {
+                            animateTo(markerList.get(0).getPosition());
+                        }
+                    }
+                });
     }
 
     static class Builder {

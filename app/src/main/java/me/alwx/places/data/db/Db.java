@@ -22,6 +22,10 @@ public final class Db {
     return cursor.getInt(cursor.getColumnIndexOrThrow(columnName));
   }
 
+  public static float getFloat(Cursor cursor, String columnName) {
+    return cursor.getFloat(cursor.getColumnIndexOrThrow(columnName));
+  }
+
   private Db() {
     throw new AssertionError("No instances.");
   }

@@ -1,8 +1,8 @@
 package me.alwx.places.ui.places_list;
 
 import android.databinding.DataBindingUtil;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,9 +17,11 @@ import javax.inject.Inject;
 
 import me.alwx.places.App;
 import me.alwx.places.R;
+import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
 import me.alwx.places.ui.BaseFragment;
 import me.alwx.places.databinding.FragmentPlacesBinding;
+import me.alwx.places.utils.LocationUtils;
 
 /**
  * @author alwx
@@ -59,6 +61,12 @@ public class PlacesListFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         presenter.onResume();
@@ -68,6 +76,12 @@ public class PlacesListFragment extends BaseFragment {
     public void onPause() {
         presenter.onPause();
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        presenter.onDestroy();
+        super.onDestroy();
     }
 
     @Override
@@ -95,11 +109,18 @@ public class PlacesListFragment extends BaseFragment {
         binding.empty.setVisibility(View.VISIBLE);
     }
 
-    public void showPlaces(List<Place> places) {
+    public void showPlaceList(List<Place> placeList) {
         binding.list.setVisibility(View.VISIBLE);
         binding.empty.setVisibility(View.GONE);
 
-        adapter.setPlaceList(places);
-        adapter.notifyDataSetChanged();
+        adapter.setPlaceList(placeList);
+    }
+
+    public void setAdapterGeodataList(List<Geodata> geodataList) {
+        adapter.setGeodataList(geodataList);
+    }
+
+    public void setAdapterLocation(Location location) {
+        adapter.setLocation(location);
     }
 }

@@ -28,7 +28,9 @@ public abstract class Address implements AddressModel, Parcelable {
             String city = Db.getString(cursor, CITY);
             String post_code = Db.getString(cursor, POST_CODE);
             String country = Db.getString(cursor, COUNTRY);
-            return new AutoValue_Address(id, location, street, city, post_code, country);
+            return new AutoValue_Address(
+                    id, location, street, city, post_code, country
+            );
         }
     };
 

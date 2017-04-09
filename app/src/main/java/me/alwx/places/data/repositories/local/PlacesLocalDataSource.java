@@ -3,15 +3,17 @@ package me.alwx.places.data.repositories.local;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
 
 import me.alwx.places.data.models.Address;
+import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
-import me.alwx.places.data.repositories.PlacesDataSource;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -20,7 +22,7 @@ import rx.functions.Func1;
  * @version 1.0
  */
 
-public class PlacesLocalDataSource implements PlacesDataSource {
+public class PlacesLocalDataSource {
     private BriteDatabase database;
     private SQLiteOpenHelper openHelper;
 
@@ -29,7 +31,6 @@ public class PlacesLocalDataSource implements PlacesDataSource {
         this.openHelper = openHelper;
     }
 
-    @Override
     public Observable<List<Place>> getPlaces() {
         return database
                 .createQuery(Place.TABLE_NAME, Place.selectAll())
@@ -41,12 +42,22 @@ public class PlacesLocalDataSource implements PlacesDataSource {
                 });
     }
 
-    @Override
+    public Observable<List<Geodata>> getGeodata() {
+        return database
+                .createQuery(Geodata.TABLE_NAME, Geodata.selectAll())
+                .mapToList(new Func1<Cursor, Geodata>() {
+                    @Override
+                    public Geodata call(Cursor cursor) {
+                        return Geodata.MAPPER.map(cursor);
+                    }
+                });
+    }
+
     public void savePlace(@NonNull Place place) {
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
         Place.InsertRow placeInsertRow = new Place.InsertRow(db);
-        placeInsertRow.bind(place.title(), place.description(), place.phone());
+        placeInsertRow.bind(place.id(), place.title(), place.description(), place.phone());
         database.executeInsert(Place.TABLE_NAME, placeInsertRow.program);
 
         Address address = place.address();
@@ -64,8 +75,17 @@ public class PlacesLocalDataSource implements PlacesDataSource {
         }
     }
 
+    public void saveGeodata(@NonNull Geodata geodata) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+
+        Geodata.InsertRow geodataInsertRow = new Geodata.InsertRow(db);
+        geodataInsertRow.bind(geodata.id(), geodata.latitude(), geodata.longitude());
+        database.executeInsert(Geodata.TABLE_NAME, geodataInsertRow.program);
+    }
+
     public void removeAll() {
         database.execute(Place.DELETEALL);
         database.execute(Address.DELETEALL);
+        database.execute(Geodata.DELETEALL);
     }
 }

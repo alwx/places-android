@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import me.alwx.places.data.models.Address;
+import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
 
 /**
@@ -23,6 +24,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Place.CREATE_TABLE);
         db.execSQL(Address.CREATE_TABLE);
+        db.execSQL(Geodata.CREATE_TABLE);
     }
 
     @Override

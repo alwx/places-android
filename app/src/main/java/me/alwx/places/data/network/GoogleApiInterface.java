@@ -4,6 +4,7 @@ import me.alwx.places.data.models.gson.GeocodeResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * @author alwx
@@ -13,5 +14,5 @@ public interface GoogleApiInterface {
     String SERVICE_URL = "http://maps.googleapis.com/maps/api/";
 
     @GET("geocode/json")
-    Call<GeocodeResponse> getParams(@Query("address") String address);
+    Observable<GeocodeResponse> getParams(@Query("address") String address);
 }
