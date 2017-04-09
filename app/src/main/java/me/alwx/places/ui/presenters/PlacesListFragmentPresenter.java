@@ -78,6 +78,17 @@ public class PlacesListFragmentPresenter {
 
         loadSubscriptions.clear();
 
+        Subscription geodataSubscription = placesRepository
+                .getGeodata()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Geodata>>() {
+                    @Override
+                    public void call(List<Geodata> geodataList) {
+                        fragment.setAdapterGeodataList(geodataList);
+                    }
+                });
+
         Subscription placesSubscription = placesRepository
                 .getPlaces()
                 .flatMap(new Func1<List<Place>, Observable<Place>>() {
@@ -110,19 +121,8 @@ public class PlacesListFragmentPresenter {
                     }
                 });
 
-        Subscription geodataSubscription = placesRepository
-                .getGeodata()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<Geodata>>() {
-                    @Override
-                    public void call(List<Geodata> geodataList) {
-                        fragment.setAdapterGeodataList(geodataList);
-                    }
-                });
-
-        loadSubscriptions.add(placesSubscription);
         loadSubscriptions.add(geodataSubscription);
+        loadSubscriptions.add(placesSubscription);
     }
 
     private void subscribeToEvents() {

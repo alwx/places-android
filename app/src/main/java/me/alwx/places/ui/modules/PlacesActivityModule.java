@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.R;
 import me.alwx.places.di.scopes.ActivityScope;
-import me.alwx.places.ui.adapters.Page;
+import me.alwx.places.data.models.inner.Page;
 import me.alwx.places.ui.adapters.PlacesPagerAdapter;
 import me.alwx.places.ui.activities.PlacesActivity;
 import me.alwx.places.ui.fragments.PlacesAboutFragment;

@@ -1,4 +1,4 @@
-package me.alwx.places.ui.adapters;
+package me.alwx.places.data.models.inner;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;

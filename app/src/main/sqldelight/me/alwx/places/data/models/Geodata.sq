@@ -1,7 +1,8 @@
 CREATE TABLE geodata (
     id INTEGER NOT NULL PRIMARY KEY,
     latitude REAL AS Float,
-    longitude REAL AS Float
+    longitude REAL AS Float,
+    address TEXT
 );
 
 SelectAll:

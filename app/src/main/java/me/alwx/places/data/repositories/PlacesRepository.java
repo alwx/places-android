@@ -21,16 +21,18 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 /**
+ * This class contains methods that provide an access to {@link Place}
+ * and related {@link Geodata} objects from local and remote data repositories.
+ *
  * @author alwx
  * @version 1.0
  */
-
 public class PlacesRepository {
     private PlacesLocalDataSource localDataSource;
     private PlacesRemoteDataSource remoteDataSource;
 
     private Map<Long, Place> cachedPlaces;
-    private Map<Long, Geodata> cachedGeodata;
+    private Map<String, Geodata> cachedGeodata;
     private boolean cacheIsDirty = false;
 
     private CompositeSubscription geoParamsSubscription;
@@ -43,6 +45,12 @@ public class PlacesRepository {
         geoParamsSubscription = new CompositeSubscription();
     }
 
+    /**
+     * Creates an Observable that uses cachedPlaces, remote and local repositores
+     * to get Places.
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<List<Place>> getPlaces() {
         if (cachedPlaces != null && !cacheIsDirty) {
             return Observable.from(cachedPlaces.values()).toList();
@@ -66,10 +74,19 @@ public class PlacesRepository {
         }
     }
 
+    /**
+     * Marks cache as dirty, and by doing this initiates the refreshing process.
+     */
     public void refreshPlaces() {
         cacheIsDirty = true;
     }
 
+    /**
+     * Sends a request to remote repository and saves data to local repository
+     * and to cachedPlaces map.
+     *
+     * @return the new {@link Observable} instance
+     */
     private Observable<List<Place>> getAndSaveRemotePlaces() {
         return remoteDataSource
                 .getPlaces()
@@ -97,6 +114,12 @@ public class PlacesRepository {
                 });
     }
 
+    /**
+     * Creates an Observable which returns {@link Place} objects from local
+     * repository when it is subscribed to.
+     *
+     * @return the new {@link Observable} instance
+     */
     private Observable<List<Place>> getAndCacheLocalPlaces() {
         return localDataSource
                 .getPlaces()
@@ -115,9 +138,25 @@ public class PlacesRepository {
                 });
     }
 
+    /**
+     * Returns a {@link Subscription} to Geodata about a {@link Place}.
+     * This methods requests Geodata from Google API and saves it to both local repository
+     * and cachedGeodata map.
+     *
+     * @param place Place of interest
+     *
+     * @return the new {@link Subscription} instance
+     */
     private Subscription getAndSaveRemoteGeodata(@NonNull final Place place) {
+        final String addressStr = place.address().asString();
+        if (cachedGeodata != null && cachedGeodata.containsKey(addressStr)) {
+            return Observable.just(cachedGeodata.get(addressStr)).subscribe();
+        } else if (cachedGeodata == null) {
+            cachedGeodata = new LinkedHashMap<>();
+        }
+
         return remoteDataSource
-                .getGeoParams(place.address().asString())
+                .getGeoParams(addressStr)
                 .flatMap(new Func1<GeocodeResponse, Observable<Geodata>>() {
                     @Override
                     public Observable<Geodata> call(GeocodeResponse resp) {
@@ -125,14 +164,11 @@ public class PlacesRepository {
                                 .setId(place.id())
                                 .setLatitude(resp.getLat())
                                 .setLongitude(resp.getLng())
+                                .setAddress(addressStr)
                                 .build();
 
                         localDataSource.saveGeodata(geodata);
-
-                        if (cachedGeodata == null) {
-                            cachedGeodata = new LinkedHashMap<>();
-                        }
-                        cachedGeodata.put(geodata.id(), geodata);
+                        cachedGeodata.put(place.address().toString(), geodata);
 
                         return Observable.just(geodata);
                     }
@@ -140,6 +176,12 @@ public class PlacesRepository {
                 .subscribe();
     }
 
+    /**
+     * Returns the Observable which observes for Geodata changes.
+     * This method returns data from local repository.
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<List<Geodata>> getGeodata() {
         return localDataSource
                 .getGeodata()
@@ -153,7 +195,7 @@ public class PlacesRepository {
                                         if (cachedGeodata == null) {
                                             cachedGeodata = new LinkedHashMap<>();
                                         }
-                                        cachedGeodata.put(geodata.id(), geodata);
+                                        cachedGeodata.put(geodata.address(), geodata);
                                     }
                                 })
                                 .toList();

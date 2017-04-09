@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.Arrays;
 import java.util.List;
 
+import me.alwx.places.data.models.inner.Page;
+
 /**
  * @author alwx
  * @version 1.0

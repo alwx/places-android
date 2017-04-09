@@ -11,7 +11,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import me.alwx.places.R;
 import me.alwx.places.ui.activities.PlacesActivity;
-import me.alwx.places.ui.adapters.Page;
+import me.alwx.places.data.models.inner.Page;
 import me.alwx.places.ui.adapters.PlacesPagerAdapter;
 import me.alwx.places.utils.PermissionsUtils;
 

@@ -26,7 +26,8 @@ public abstract class Geodata implements GeodataModel, Parcelable {
             long id = Db.getLong(cursor, ID);
             float latitude = Db.getFloat(cursor, LATITUDE);
             float longitude = Db.getFloat(cursor, LONGITUDE);
-            return new AutoValue_Geodata(id, latitude, longitude);
+            String address = Db.getString(cursor, ADDRESS);
+            return new AutoValue_Geodata(id, latitude, longitude, address);
         }
     };
 
@@ -60,6 +61,7 @@ public abstract class Geodata implements GeodataModel, Parcelable {
         public abstract Builder setId(long id);
         public abstract Builder setLatitude(Float latitude);
         public abstract Builder setLongitude(Float longitude);
+        public abstract Builder setAddress(String address);
         public abstract Geodata build();
     }
 }
