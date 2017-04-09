@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_map;
+package me.alwx.places.ui.modules;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -6,6 +6,8 @@ import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.di.scopes.FragmentScope;
+import me.alwx.places.ui.fragments.PlacesMapFragment;
+import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
 import me.alwx.places.utils.LocationUtils;
 import me.alwx.places.utils.PermissionsUtils;
 
@@ -13,7 +15,7 @@ import me.alwx.places.utils.PermissionsUtils;
 public class PlacesMapFragmentModule {
     private PlacesMapFragment fragment;
 
-    PlacesMapFragmentModule(PlacesMapFragment fragment) {
+    public PlacesMapFragmentModule(PlacesMapFragment fragment) {
         this.fragment = fragment;
     }
 

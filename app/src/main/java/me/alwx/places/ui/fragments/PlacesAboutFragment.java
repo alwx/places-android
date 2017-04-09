@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_about;
+package me.alwx.places.ui.fragments;
 
 import android.app.Fragment;
 import android.databinding.DataBindingUtil;
@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import me.alwx.places.R;
 import me.alwx.places.databinding.FragmentAboutBinding;
-import me.alwx.places.ui.places_list.PlacesListFragment;
 
 /**
  * @author alwx

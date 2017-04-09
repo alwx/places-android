@@ -1,4 +1,4 @@
-package me.alwx.places.ui;
+package me.alwx.places.ui.activities;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;

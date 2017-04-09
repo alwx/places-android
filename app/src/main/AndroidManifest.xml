@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/ThemeDefault">
 
-        <activity android:name=".ui.places.PlacesActivity">
+        <activity android:name=".ui.activities.PlacesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

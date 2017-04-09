@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_map;
+package me.alwx.places.ui.presenters;
 
 import android.Manifest;
 import android.location.Location;
@@ -17,6 +17,7 @@ import java.util.List;
 
 import me.alwx.places.data.models.Place;
 import me.alwx.places.data.repositories.PlacesRepository;
+import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.utils.LocationUtils;
 import me.alwx.places.utils.PermissionsUtils;
 import rx.Observable;
@@ -51,21 +52,21 @@ public class PlacesMapFragmentPresenter {
         this.locationUtils = builder.locationUtils;
     }
 
-    void onCreate(Bundle state) {
+    public void onCreate(Bundle state) {
         this.state = state;
         subscribeToEvents();
     }
 
-    void onResume() {
+    public void onResume() {
         locationUtils.startReceivingUpdates();
         initMap();
     }
 
-    void onPause() {
+    public void onPause() {
         locationUtils.stopReceivingUpdates();
     }
 
-    void onDestroy() {
+    public void onDestroy() {
         if (permissionSubscription != null) {
             permissionSubscription.unsubscribe();
             permissionSubscription = null;
@@ -183,33 +184,33 @@ public class PlacesMapFragmentPresenter {
                 });
     }
 
-    static class Builder {
+    public static class Builder {
         private PlacesMapFragment fragment;
         private PlacesRepository placesRepository;
         private PermissionsUtils permissionsUtils;
         private LocationUtils locationUtils;
 
-        Builder setFragment(PlacesMapFragment fragment) {
+        public Builder setFragment(PlacesMapFragment fragment) {
             this.fragment = fragment;
             return this;
         }
 
-        Builder setPlacesRepository(PlacesRepository repository) {
+        public Builder setPlacesRepository(PlacesRepository repository) {
             this.placesRepository = repository;
             return this;
         }
 
-        Builder setPermissionsUtils(PermissionsUtils requester) {
+        public Builder setPermissionsUtils(PermissionsUtils requester) {
             this.permissionsUtils = requester;
             return this;
         }
 
-        Builder setLocationUtils(LocationUtils locationUtils) {
+        public Builder setLocationUtils(LocationUtils locationUtils) {
             this.locationUtils = locationUtils;
             return this;
         }
 
-        PlacesMapFragmentPresenter build() {
+        public PlacesMapFragmentPresenter build() {
             return new PlacesMapFragmentPresenter(this);
         }
     }

@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_list;
+package me.alwx.places.ui.modules;
 
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,6 +9,9 @@ import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.di.scopes.FragmentScope;
+import me.alwx.places.ui.adapters.PlacesListAdapter;
+import me.alwx.places.ui.fragments.PlacesListFragment;
+import me.alwx.places.ui.presenters.PlacesListFragmentPresenter;
 import me.alwx.places.utils.LocationUtils;
 
 @Module
@@ -28,8 +31,8 @@ public class PlacesListFragmentModule {
 
     @Provides
     @FragmentScope
-    PlacesAdapter providePlacesAdapter() {
-        return new PlacesAdapter(fragment);
+    PlacesListAdapter providePlacesAdapter() {
+        return new PlacesListAdapter(fragment);
     }
 
     @Provides

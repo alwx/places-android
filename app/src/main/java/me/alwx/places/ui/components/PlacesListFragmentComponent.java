@@ -1,7 +1,9 @@
-package me.alwx.places.ui.places_list;
+package me.alwx.places.ui.components;
 
 import dagger.Subcomponent;
 import me.alwx.places.di.scopes.FragmentScope;
+import me.alwx.places.ui.fragments.PlacesListFragment;
+import me.alwx.places.ui.modules.PlacesListFragmentModule;
 
 @FragmentScope
 @Subcomponent(modules={ PlacesListFragmentModule.class })

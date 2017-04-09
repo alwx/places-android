@@ -1,4 +1,4 @@
-package me.alwx.places.ui;
+package me.alwx.places.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -1,15 +1,14 @@
-package me.alwx.places.ui.places_list;
+package me.alwx.places.ui.presenters;
 
 import android.location.Location;
 import android.os.Bundle;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
 import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
 import me.alwx.places.data.repositories.PlacesRepository;
+import me.alwx.places.ui.fragments.PlacesListFragment;
 import me.alwx.places.utils.LocationUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -42,29 +41,29 @@ public class PlacesListFragmentPresenter {
         this.locationUtils = locationUtils;
     }
 
-    void onCreate(Bundle state) {
+    public void onCreate(Bundle state) {
         subscribeToEvents();
     }
 
-    void onResume() {
+    public void onResume() {
         fragment.initializePlaceList();
         loadPlaces(false);
         locationUtils.startReceivingUpdates();
     }
 
-    void onPause() {
+    public void onPause() {
         loadSubscriptions.clear();
         locationUtils.stopReceivingUpdates();
     }
 
-    void onDestroy() {
+    public void onDestroy() {
         if (locationSubscription != null) {
             locationSubscription.unsubscribe();
             locationSubscription = null;
         }
     }
 
-    void loadPlaces(boolean forceUpdate) {
+    public void loadPlaces(boolean forceUpdate) {
         loadPlaces(forceUpdate || firstLoad, true);
         firstLoad = false;
     }

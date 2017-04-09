@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_map;
+package me.alwx.places.ui.fragments;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -14,7 +14,8 @@ import javax.inject.Inject;
 import me.alwx.places.App;
 import me.alwx.places.R;
 import me.alwx.places.databinding.FragmentMapBinding;
-import me.alwx.places.ui.BaseFragment;
+import me.alwx.places.ui.modules.PlacesMapFragmentModule;
+import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
 
 /**
  * @author alwx

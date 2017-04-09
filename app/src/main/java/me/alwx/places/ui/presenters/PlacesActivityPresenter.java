@@ -1,15 +1,18 @@
-package me.alwx.places.ui.places;
+package me.alwx.places.ui.presenters;
 
 
 import android.Manifest;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import me.alwx.places.R;
+import me.alwx.places.ui.activities.PlacesActivity;
+import me.alwx.places.ui.adapters.Page;
+import me.alwx.places.ui.adapters.PlacesPagerAdapter;
 import me.alwx.places.utils.PermissionsUtils;
 
 /**
@@ -21,23 +24,48 @@ public class PlacesActivityPresenter {
     private PlacesActivity activity;
     private GoogleApiClient apiClient;
     private PermissionsUtils permissionsUtils;
+    private PlacesPagerAdapter pagerAdapter;
 
-    PlacesActivityPresenter(PlacesActivity activity,
-                            GoogleApiClient apiClient,
-                            PermissionsUtils permissionsUtils) {
+    private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Page page = pagerAdapter.getPage(position);
+            activity.setTitle(page.title());
+            activity.setBottomNavItem(page.id());
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    public PlacesActivityPresenter(PlacesActivity activity,
+                                   GoogleApiClient apiClient,
+                                   PermissionsUtils permissionsUtils,
+                                   PlacesPagerAdapter pagerAdapter) {
         this.activity = activity;
         this.apiClient = apiClient;
         this.permissionsUtils = permissionsUtils;
+        this.pagerAdapter = pagerAdapter;
     }
 
-    void onRequestPermissionsResult(int requestCode,
-                                    String[] permissions,
-                                    int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
         permissionsUtils.onRequestResult(requestCode, permissions, grantResults);
     }
 
-    void onCreate() {
+    public void onCreate() {
+        activity.initPager(pagerAdapter);
+        activity.setTitle(pagerAdapter.getPage(0).title());
         initBottomBar();
+
         permissionsUtils.requestPermissions(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -45,12 +73,14 @@ public class PlacesActivityPresenter {
         );
     }
 
-    void onStart() {
+    public void onStart() {
         apiClient.connect();
+        activity.setPagerCallbacks(onPageChangeListener);
     }
 
-    void onStop() {
+    public void onStop() {
         apiClient.disconnect();
+        activity.clearPagerCallbacks(onPageChangeListener);
     }
 
     private void initBottomBar() {

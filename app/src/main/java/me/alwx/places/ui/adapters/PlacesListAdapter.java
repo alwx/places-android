@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_list;
+package me.alwx.places.ui.adapters;
 
 import android.databinding.DataBindingUtil;
 import android.location.Location;
@@ -17,13 +17,14 @@ import me.alwx.places.R;
 import me.alwx.places.data.models.Geodata;
 import me.alwx.places.databinding.ItemPlaceBinding;
 import me.alwx.places.data.models.Place;
+import me.alwx.places.ui.fragments.PlacesListFragment;
 
 /**
  * @author alwx
  * @version 1.0
  */
 
-public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder> {
+public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.ViewHolder> {
     private PlacesListFragment fragment;
     private OnClickListener onClickListener;
 
@@ -31,7 +32,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
     private LongSparseArray<Geodata> geodataArray = new LongSparseArray<>();
     private Location location;
 
-    PlacesAdapter(PlacesListFragment fragment) {
+    public PlacesListAdapter(PlacesListFragment fragment) {
         this.fragment = fragment;
     }
     
@@ -44,12 +45,12 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
         return new ViewHolder(v);
     }
 
-    void setPlaceList(List<Place> placeList) {
+    public void setPlaceList(List<Place> placeList) {
         this.placeList = placeList;
         notifyDataSetChanged();
     }
 
-    void setGeodataList(List<Geodata> geodataList) {
+    public void setGeodataList(List<Geodata> geodataList) {
         geodataArray = new LongSparseArray<>();
         for (Geodata geodata : geodataList) {
             geodataArray.append(geodata.id(), geodata);
@@ -57,7 +58,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    void setLocation(Location location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
     

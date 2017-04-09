@@ -1,4 +1,4 @@
-package me.alwx.places.ui.places_list;
+package me.alwx.places.ui.fragments;
 
 import android.databinding.DataBindingUtil;
 import android.location.Location;
@@ -19,9 +19,10 @@ import me.alwx.places.App;
 import me.alwx.places.R;
 import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
-import me.alwx.places.ui.BaseFragment;
 import me.alwx.places.databinding.FragmentPlacesBinding;
-import me.alwx.places.utils.LocationUtils;
+import me.alwx.places.ui.adapters.PlacesListAdapter;
+import me.alwx.places.ui.modules.PlacesListFragmentModule;
+import me.alwx.places.ui.presenters.PlacesListFragmentPresenter;
 
 /**
  * @author alwx
@@ -35,7 +36,7 @@ public class PlacesListFragment extends BaseFragment {
     PlacesListFragmentPresenter presenter;
 
     @Inject
-    PlacesAdapter adapter;
+    PlacesListAdapter adapter;
 
     @Inject
     DividerItemDecoration dividerItemDecoration;
