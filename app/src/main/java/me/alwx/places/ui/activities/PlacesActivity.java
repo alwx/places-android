@@ -78,6 +78,7 @@ public class PlacesActivity extends BaseActivity {
 
     public void setPagerCallbacks(ViewPager.OnPageChangeListener listener) {
         binding.pager.addOnPageChangeListener(listener);
+        binding.pager.setOffscreenPageLimit(2);
     }
 
     public void clearPagerCallbacks(ViewPager.OnPageChangeListener listener) {

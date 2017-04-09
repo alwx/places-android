@@ -1,6 +1,7 @@
 package me.alwx.places.ui.fragments;
 
 import android.databinding.DataBindingUtil;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,11 +10,16 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import me.alwx.places.App;
 import me.alwx.places.R;
+import me.alwx.places.data.models.Geodata;
+import me.alwx.places.data.models.Place;
 import me.alwx.places.databinding.FragmentMapBinding;
+import me.alwx.places.ui.adapters.PlacesMapAdapter;
 import me.alwx.places.ui.modules.PlacesMapFragmentModule;
 import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
 
@@ -27,6 +33,9 @@ public class PlacesMapFragment extends BaseFragment {
 
     @Inject
     PlacesMapFragmentPresenter presenter;
+
+    @Inject
+    PlacesMapAdapter adapter;
 
     public static PlacesMapFragment newInstance() {
         return new PlacesMapFragment();
@@ -77,5 +86,25 @@ public class PlacesMapFragment extends BaseFragment {
         binding.map.onCreate(state);
         binding.map.getMapAsync(callback);
         binding.map.onResume();
+    }
+
+    public void initPager(List<Place> placeList) {
+        binding.pager.setAdapter(adapter);
+        adapter.setPlaceList(placeList);
+    }
+
+    public void setAdapterGeodataList(List<Geodata> geodataList) {
+        adapter.setGeodataList(geodataList);
+    }
+
+    public void setAdapterLocation(Location location) {
+        adapter.setLocation(location);
+    }
+
+    public void pagerNavigateTo(long id) {
+        int position = adapter.getPosition(id);
+        if (position != -1) {
+            binding.pager.setCurrentItem(position);
+        }
     }
 }

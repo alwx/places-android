@@ -16,43 +16,26 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/App.Default.Item.Distance"
                 android:id="@+id/distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/black_opacity_55"
-                android:textSize="@dimen/font_normal"/>
+                android:layout_alignParentEnd="true"/>
 
             <TextView
+                style="@style/App.Default.Item.Title"
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/distance"
-                android:layout_toLeftOf="@id/distance"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/font_normal"/>
+                android:layout_toStartOf="@id/distance"/>
 
         </RelativeLayout>
 
         <TextView
+            style="@style/App.Default.Item.Address"
             android:id="@+id/address"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="@color/black_opacity_55"
-            android:textSize="@dimen/font_normal"/>
-
-        <LinearLayout
-            android:id="@+id/phones"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

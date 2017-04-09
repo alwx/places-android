@@ -32,7 +32,7 @@ public abstract class Place implements PlaceModel, Parcelable {
 
     public static String selectAll() {
         return String.format(
-                "SELECT * FROM %1$s JOIN %3$s ON (%2$s = %3$s.%4$s);",
+                "SELECT * FROM %1$s JOIN %3$s ON (places.%2$s = %3$s.%4$s);",
                 TABLE_NAME,
                 ID,
                 Address.TABLE_NAME,

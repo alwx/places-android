@@ -23,4 +23,27 @@
         <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
+    <!-- Item styles -->
+
+    <style name="App.Default.Item.Title" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/font_large</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="App.Default.Item.Distance" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/black_opacity_35</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+        <item name="android:paddingTop">@dimen/padding_ultra_tiny</item>
+        <item name="android:paddingStart">@dimen/padding_normal</item>
+    </style>
+
+    <style name="App.Default.Item.Address" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/black_opacity_55</item>
+        <item name="android:textSize">@dimen/font_normal</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
 </resources>

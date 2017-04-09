@@ -5,6 +5,7 @@
     <dimen name="font_large">18sp</dimen>
     <dimen name="font_larger">22sp</dimen>
 
+    <dimen name="padding_ultra_tiny">2dp</dimen>
     <dimen name="padding_tiny">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_small_plus">12dp</dimen>

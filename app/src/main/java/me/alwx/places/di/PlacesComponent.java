@@ -3,6 +3,7 @@ package me.alwx.places.di;
 import dagger.Subcomponent;
 import me.alwx.places.di.modules.LocationModule;
 import me.alwx.places.di.modules.PlacesModule;
+import me.alwx.places.di.modules.PageNavigatorModule;
 import me.alwx.places.di.scopes.DataScope;
 import me.alwx.places.ui.components.PlacesAboutFragmentComponent;
 import me.alwx.places.ui.components.PlacesActivityComponent;
@@ -14,7 +15,7 @@ import me.alwx.places.ui.modules.PlacesListFragmentModule;
 import me.alwx.places.ui.modules.PlacesMapFragmentModule;
 
 @DataScope
-@Subcomponent(modules={ PlacesModule.class, LocationModule.class})
+@Subcomponent(modules={ PlacesModule.class, LocationModule.class, PageNavigatorModule.class})
 public interface PlacesComponent {
     PlacesActivityComponent plus(PlacesActivityModule module);
 

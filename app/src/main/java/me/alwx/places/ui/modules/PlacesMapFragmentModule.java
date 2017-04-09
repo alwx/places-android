@@ -6,9 +6,12 @@ import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.di.scopes.FragmentScope;
+import me.alwx.places.ui.adapters.PlacesListAdapter;
+import me.alwx.places.ui.adapters.PlacesMapAdapter;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
 import me.alwx.places.utils.LocationUtils;
+import me.alwx.places.utils.PageNavigator;
 import me.alwx.places.utils.PermissionsUtils;
 
 @Module
@@ -22,14 +25,22 @@ public class PlacesMapFragmentModule {
     @Provides
     @FragmentScope
     PlacesMapFragmentPresenter providePresenter(PlacesRepository placesRepository,
-                                                GoogleApiClient apiClient,
                                                 PermissionsUtils permissionsUtils,
-                                                LocationUtils locationUtils) {
+                                                LocationUtils locationUtils,
+                                                PageNavigator pageNavigator) {
         return new PlacesMapFragmentPresenter.Builder()
                 .setFragment(fragment)
                 .setPlacesRepository(placesRepository)
                 .setPermissionsUtils(permissionsUtils)
                 .setLocationUtils(locationUtils)
+                .setPageNavigator(pageNavigator)
                 .build();
     }
+
+    @Provides
+    @FragmentScope
+    PlacesMapAdapter providePlacesMapAdapter() {
+        return new PlacesMapAdapter(fragment);
+    }
+
 }

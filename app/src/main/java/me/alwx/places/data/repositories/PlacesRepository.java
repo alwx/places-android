@@ -120,7 +120,7 @@ public class PlacesRepository {
      *
      * @return the new {@link Observable} instance
      */
-    private Observable<List<Place>> getAndCacheLocalPlaces() {
+    public Observable<List<Place>> getAndCacheLocalPlaces() {
         return localDataSource
                 .getPlaces()
                 .flatMap(new Func1<List<Place>, Observable<List<Place>>>() {

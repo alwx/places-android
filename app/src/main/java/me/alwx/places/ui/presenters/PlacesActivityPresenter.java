@@ -13,6 +13,7 @@ import me.alwx.places.R;
 import me.alwx.places.ui.activities.PlacesActivity;
 import me.alwx.places.data.models.inner.Page;
 import me.alwx.places.ui.adapters.PlacesPagerAdapter;
+import me.alwx.places.utils.PageNavigator;
 import me.alwx.places.utils.PermissionsUtils;
 
 /**
@@ -22,9 +23,10 @@ import me.alwx.places.utils.PermissionsUtils;
 public class PlacesActivityPresenter {
 
     private PlacesActivity activity;
-    private GoogleApiClient apiClient;
+    private GoogleApiClient googleApiClient;
     private PermissionsUtils permissionsUtils;
     private PlacesPagerAdapter pagerAdapter;
+    private PageNavigator pageNavigator;
 
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
         @Override
@@ -37,6 +39,8 @@ public class PlacesActivityPresenter {
             Page page = pagerAdapter.getPage(position);
             activity.setTitle(page.title());
             activity.setBottomNavItem(page.id());
+
+            pageNavigator.navigatedTo(page);
         }
 
         @Override
@@ -45,14 +49,12 @@ public class PlacesActivityPresenter {
         }
     };
 
-    public PlacesActivityPresenter(PlacesActivity activity,
-                                   GoogleApiClient apiClient,
-                                   PermissionsUtils permissionsUtils,
-                                   PlacesPagerAdapter pagerAdapter) {
-        this.activity = activity;
-        this.apiClient = apiClient;
-        this.permissionsUtils = permissionsUtils;
-        this.pagerAdapter = pagerAdapter;
+    private PlacesActivityPresenter(Builder builder) {
+        this.activity = builder.activity;
+        this.googleApiClient = builder.googleApiClient;
+        this.permissionsUtils = builder.permissionsUtils;
+        this.pagerAdapter = builder.pagerAdapter;
+        this.pageNavigator = builder.pageNavigator;
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -74,12 +76,12 @@ public class PlacesActivityPresenter {
     }
 
     public void onStart() {
-        apiClient.connect();
+        googleApiClient.connect();
         activity.setPagerCallbacks(onPageChangeListener);
     }
 
     public void onStop() {
-        apiClient.disconnect();
+        googleApiClient.disconnect();
         activity.clearPagerCallbacks(onPageChangeListener);
     }
 
@@ -103,5 +105,42 @@ public class PlacesActivityPresenter {
                     }
                 }
         );
+    }
+
+    public static class Builder {
+        private PlacesActivity activity;
+        private GoogleApiClient googleApiClient;
+        private PermissionsUtils permissionsUtils;
+        private PlacesPagerAdapter pagerAdapter;
+        private PageNavigator pageNavigator;
+
+        public Builder setActivity(PlacesActivity activity) {
+            this.activity = activity;
+            return this;
+        }
+
+        public Builder setGoogleApiClient(GoogleApiClient googleApiClient) {
+            this.googleApiClient = googleApiClient;
+            return this;
+        }
+
+        public Builder setPermissionsUtils(PermissionsUtils requester) {
+            this.permissionsUtils = requester;
+            return this;
+        }
+
+        public Builder setPagerAdapter(PlacesPagerAdapter pagerAdapter) {
+            this.pagerAdapter = pagerAdapter;
+            return this;
+        }
+
+        public Builder setPageNavigator(PageNavigator pageNavigator) {
+            this.pageNavigator = pageNavigator;
+            return this;
+        }
+
+        public PlacesActivityPresenter build() {
+            return new PlacesActivityPresenter(this);
+        }
     }
 }

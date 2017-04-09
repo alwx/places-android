@@ -13,6 +13,7 @@ import me.alwx.places.ui.fragments.PlacesAboutFragment;
 import me.alwx.places.ui.fragments.PlacesListFragment;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.ui.presenters.PlacesActivityPresenter;
+import me.alwx.places.utils.PageNavigator;
 import me.alwx.places.utils.PermissionsUtils;
 
 @Module
@@ -50,7 +51,14 @@ public class PlacesActivityModule {
     @ActivityScope
     PlacesActivityPresenter providePresenter(GoogleApiClient apiClient,
                                              PermissionsUtils permissionsUtils,
-                                             PlacesPagerAdapter pagerAdapter) {
-        return new PlacesActivityPresenter(activity, apiClient, permissionsUtils, pagerAdapter);
+                                             PlacesPagerAdapter pagerAdapter,
+                                             PageNavigator pageNavigator) {
+        return new PlacesActivityPresenter.Builder()
+                .setActivity(activity)
+                .setGoogleApiClient(apiClient)
+                .setPermissionsUtils(permissionsUtils)
+                .setPagerAdapter(pagerAdapter)
+                .setPageNavigator(pageNavigator)
+                .build();
     }
 }
