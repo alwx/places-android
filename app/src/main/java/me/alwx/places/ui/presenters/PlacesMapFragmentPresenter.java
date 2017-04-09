@@ -4,6 +4,7 @@ import android.Manifest;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,7 +19,6 @@ import java.util.List;
 
 import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
-import me.alwx.places.data.models.inner.Page;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.utils.LocationUtils;
@@ -44,10 +44,27 @@ public class PlacesMapFragmentPresenter {
     private Bundle state;
     private GoogleMap googleMap;
     private List<Marker> markerList = new ArrayList<>();
-    private boolean firstTime = true;
 
     private CompositeSubscription moduleSubscriptions = new CompositeSubscription();
     private CompositeSubscription dataSubscriptions = new CompositeSubscription();
+
+    private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Marker marker = markerList.get(position);
+            animateTo(marker.getPosition());
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     private PlacesMapFragmentPresenter(Builder builder) {
         this.fragment = builder.fragment;
@@ -65,18 +82,17 @@ public class PlacesMapFragmentPresenter {
     public void onResume() {
         locationUtils.startReceivingUpdates();
         initMap();
+        fragment.setPagerCallbacks(onPageChangeListener);
     }
 
     public void onPause() {
         locationUtils.stopReceivingUpdates();
-        dataSubscriptions.clear();
+        fragment.clearPagerCallbacks(onPageChangeListener);
     }
 
     public void onDestroy() {
-        if (moduleSubscriptions != null) {
-            moduleSubscriptions.unsubscribe();
-            moduleSubscriptions = null;
-        }
+        moduleSubscriptions.clear();
+        dataSubscriptions.clear();
     }
 
     private void subscribeToEvents() {
@@ -102,7 +118,6 @@ public class PlacesMapFragmentPresenter {
                         }
                     }
                 });
-
         Subscription pageNavigatorSubscription = pageInteractor
                 .getPlacesLoadedEvents()
                 .subscribe(new Action1<Void>() {
@@ -142,6 +157,7 @@ public class PlacesMapFragmentPresenter {
             @Override
             public void onMapReady(GoogleMap map) {
                 googleMap = map;
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
 
                 permissionsUtils
                         .checkPermissions(
@@ -182,7 +198,7 @@ public class PlacesMapFragmentPresenter {
     }
 
     private void animateTo(LatLng latLng) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 11);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         googleMap.animateCamera(cameraUpdate);
     }
 

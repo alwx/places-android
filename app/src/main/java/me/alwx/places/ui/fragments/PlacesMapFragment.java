@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import me.alwx.places.data.models.Place;
 import me.alwx.places.databinding.FragmentMapBinding;
 import me.alwx.places.ui.adapters.PlacesMapAdapter;
 import me.alwx.places.ui.modules.PlacesMapFragmentModule;
+import me.alwx.places.ui.presenters.PlacesActivityPresenter;
 import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
 
 /**
@@ -96,12 +98,33 @@ public class PlacesMapFragment extends BaseFragment {
 
     /**
      * Initializes ViewPager.
+     * To be called by {@link PlacesMapFragmentPresenter}
      *
      * @param placeList list of {@link Place} objects
      */
     public void initPager(List<Place> placeList) {
         binding.pager.setAdapter(adapter);
         adapter.setPlaceList(placeList);
+    }
+
+    /**
+     * Sets {@link ViewPager.OnPageChangeListener} listener for view pager.
+     * To be called by {@link PlacesMapFragmentPresenter}
+     *
+     * @param listener on page change listener
+     */
+    public void setPagerCallbacks(ViewPager.OnPageChangeListener listener) {
+        binding.pager.addOnPageChangeListener(listener);
+    }
+
+    /**
+     * Removes the callback.
+     * To be called by {@link PlacesMapFragmentPresenter}
+     *
+     * @param listener on page change listener
+     */
+    public void clearPagerCallbacks(ViewPager.OnPageChangeListener listener) {
+        binding.pager.removeOnPageChangeListener(listener);
     }
 
     /**
