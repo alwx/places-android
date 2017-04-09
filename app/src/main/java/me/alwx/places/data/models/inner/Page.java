@@ -14,9 +14,11 @@ import com.google.auto.value.AutoValue;
  */
 @AutoValue
 public abstract class Page {
-    public static Page create(Fragment fragment, @IdRes int id, @StringRes int title) {
-        return new AutoValue_Page(fragment, id, title);
+    public static Page create(int i, Fragment fragment, @IdRes int id, @StringRes int title) {
+        return new AutoValue_Page(i, fragment, id, title);
     }
+
+    public abstract int index();
 
     public abstract Fragment fragment();
 

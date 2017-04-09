@@ -13,7 +13,7 @@ import me.alwx.places.ui.fragments.PlacesAboutFragment;
 import me.alwx.places.ui.fragments.PlacesListFragment;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.ui.presenters.PlacesActivityPresenter;
-import me.alwx.places.utils.PageNavigator;
+import me.alwx.places.utils.PageInteractor;
 import me.alwx.places.utils.PermissionsUtils;
 
 /**
@@ -34,16 +34,19 @@ public class PlacesActivityModule {
         return new PlacesPagerAdapter(
                 activity.getSupportFragmentManager(),
                 Page.create(
+                        0,
                         PlacesListFragment.newInstance(),
                         R.id.action_places,
                         R.string.main_navigation_places
                 ),
                 Page.create(
+                        1,
                         PlacesMapFragment.newInstance(),
                         R.id.action_map,
                         R.string.main_navigation_map
                 ),
                 Page.create(
+                        2,
                         PlacesAboutFragment.newInstance(),
                         R.id.action_about,
                         R.string.main_navigation_about
@@ -56,13 +59,13 @@ public class PlacesActivityModule {
     PlacesActivityPresenter providePresenter(GoogleApiClient apiClient,
                                              PermissionsUtils permissionsUtils,
                                              PlacesPagerAdapter pagerAdapter,
-                                             PageNavigator pageNavigator) {
+                                             PageInteractor pageInteractor) {
         return new PlacesActivityPresenter.Builder()
                 .setActivity(activity)
                 .setGoogleApiClient(apiClient)
                 .setPermissionsUtils(permissionsUtils)
                 .setPagerAdapter(pagerAdapter)
-                .setPageNavigator(pageNavigator)
+                .setPageInteractor(pageInteractor)
                 .build();
     }
 }

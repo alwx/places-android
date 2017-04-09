@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import me.alwx.places.R;
+import me.alwx.places.data.models.Place;
 import me.alwx.places.ui.activities.PlacesActivity;
 import me.alwx.places.data.models.inner.Page;
 import me.alwx.places.ui.adapters.PlacesPagerAdapter;
-import me.alwx.places.utils.PageNavigator;
+import me.alwx.places.utils.PageInteractor;
 import me.alwx.places.utils.PermissionsUtils;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * @author alwx (https://alwx.me)
@@ -26,7 +29,9 @@ public class PlacesActivityPresenter {
     private GoogleApiClient googleApiClient;
     private PermissionsUtils permissionsUtils;
     private PlacesPagerAdapter pagerAdapter;
-    private PageNavigator pageNavigator;
+    private PageInteractor pageInteractor;
+
+    private Subscription pageInteractorSubscription;
 
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
         @Override
@@ -39,8 +44,6 @@ public class PlacesActivityPresenter {
             Page page = pagerAdapter.getPage(position);
             activity.setTitle(page.title());
             activity.setBottomNavItem(page.id());
-
-            pageNavigator.navigatedTo(page);
         }
 
         @Override
@@ -54,7 +57,7 @@ public class PlacesActivityPresenter {
         this.googleApiClient = builder.googleApiClient;
         this.permissionsUtils = builder.permissionsUtils;
         this.pagerAdapter = builder.pagerAdapter;
-        this.pageNavigator = builder.pageNavigator;
+        this.pageInteractor = builder.pageInteractor;
     }
 
     public void onRequestPermissionsResult(int requestCode,
@@ -73,6 +76,13 @@ public class PlacesActivityPresenter {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         );
+        pageInteractorSubscription = pageInteractor.getGoToMapPlaceEvents()
+                .subscribe(new Action1<Place>() {
+                    @Override
+                    public void call(Place place) {
+                        activity.setPagerItem(1);
+                    }
+                });
     }
 
     public void onStart() {
@@ -83,6 +93,13 @@ public class PlacesActivityPresenter {
     public void onStop() {
         googleApiClient.disconnect();
         activity.clearPagerCallbacks(onPageChangeListener);
+    }
+
+    public void onDestroy() {
+        if (pageInteractorSubscription != null) {
+            pageInteractorSubscription.unsubscribe();
+            pageInteractorSubscription = null;
+        }
     }
 
     private void initBottomBar() {
@@ -112,7 +129,7 @@ public class PlacesActivityPresenter {
         private GoogleApiClient googleApiClient;
         private PermissionsUtils permissionsUtils;
         private PlacesPagerAdapter pagerAdapter;
-        private PageNavigator pageNavigator;
+        private PageInteractor pageInteractor;
 
         public Builder setActivity(PlacesActivity activity) {
             this.activity = activity;
@@ -134,8 +151,8 @@ public class PlacesActivityPresenter {
             return this;
         }
 
-        public Builder setPageNavigator(PageNavigator pageNavigator) {
-            this.pageNavigator = pageNavigator;
+        public Builder setPageInteractor(PageInteractor pageInteractor) {
+            this.pageInteractor = pageInteractor;
             return this;
         }
 

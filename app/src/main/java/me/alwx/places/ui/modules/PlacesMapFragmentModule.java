@@ -8,7 +8,7 @@ import me.alwx.places.ui.adapters.PlacesMapAdapter;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
 import me.alwx.places.utils.LocationUtils;
-import me.alwx.places.utils.PageNavigator;
+import me.alwx.places.utils.PageInteractor;
 import me.alwx.places.utils.PermissionsUtils;
 
 /**
@@ -28,13 +28,13 @@ public class PlacesMapFragmentModule {
     PlacesMapFragmentPresenter providePresenter(PlacesRepository placesRepository,
                                                 PermissionsUtils permissionsUtils,
                                                 LocationUtils locationUtils,
-                                                PageNavigator pageNavigator) {
+                                                PageInteractor pageInteractor) {
         return new PlacesMapFragmentPresenter.Builder()
                 .setFragment(fragment)
                 .setPlacesRepository(placesRepository)
                 .setPermissionsUtils(permissionsUtils)
                 .setLocationUtils(locationUtils)
-                .setPageNavigator(pageNavigator)
+                .setPageInteractor(pageInteractor)
                 .build();
     }
 

@@ -3,7 +3,7 @@ package me.alwx.places.di.modules;
 import dagger.Module;
 import dagger.Provides;
 import me.alwx.places.di.scopes.DataScope;
-import me.alwx.places.utils.PageNavigator;
+import me.alwx.places.utils.PageInteractor;
 
 /**
  * @author alwx (https://alwx.me)
@@ -13,7 +13,7 @@ import me.alwx.places.utils.PageNavigator;
 public class PageNavigatorModule {
     @DataScope
     @Provides
-    PageNavigator providePageNavigator() {
-        return new PageNavigator();
+    PageInteractor providePageNavigator() {
+        return new PageInteractor();
     }
 }

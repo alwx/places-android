@@ -13,6 +13,7 @@ import me.alwx.places.ui.adapters.PlacesListAdapter;
 import me.alwx.places.ui.fragments.PlacesListFragment;
 import me.alwx.places.ui.presenters.PlacesListFragmentPresenter;
 import me.alwx.places.utils.LocationUtils;
+import me.alwx.places.utils.PageInteractor;
 
 /**
  * @author alwx (https://alwx.me)
@@ -29,8 +30,14 @@ public class PlacesListFragmentModule {
     @Provides
     @FragmentScope
     PlacesListFragmentPresenter providePresenter(PlacesRepository placesRepository,
-                                                 LocationUtils locationUtils) {
-        return new PlacesListFragmentPresenter(fragment, placesRepository, locationUtils);
+                                                 LocationUtils locationUtils,
+                                                 PageInteractor interactor) {
+        return new PlacesListFragmentPresenter.Builder()
+                .setFragment(fragment)
+                .setPlacesRepository(placesRepository)
+                .setLocationUtils(locationUtils)
+                .setPageInteractor(interactor)
+                .build();
     }
 
     @Provides

@@ -22,7 +22,7 @@ import me.alwx.places.data.models.inner.Page;
 import me.alwx.places.data.repositories.PlacesRepository;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 import me.alwx.places.utils.LocationUtils;
-import me.alwx.places.utils.PageNavigator;
+import me.alwx.places.utils.PageInteractor;
 import me.alwx.places.utils.PermissionsUtils;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,11 +39,12 @@ public class PlacesMapFragmentPresenter {
     private PlacesRepository placesRepository;
     private PermissionsUtils permissionsUtils;
     private LocationUtils locationUtils;
-    private PageNavigator pageNavigator;
+    private PageInteractor pageInteractor;
 
     private Bundle state;
     private GoogleMap googleMap;
     private List<Marker> markerList = new ArrayList<>();
+    private boolean firstTime = true;
 
     private CompositeSubscription moduleSubscriptions = new CompositeSubscription();
     private CompositeSubscription dataSubscriptions = new CompositeSubscription();
@@ -53,7 +54,7 @@ public class PlacesMapFragmentPresenter {
         this.placesRepository = builder.placesRepository;
         this.permissionsUtils = builder.permissionsUtils;
         this.locationUtils = builder.locationUtils;
-        this.pageNavigator = builder.pageNavigator;
+        this.pageInteractor = builder.pageInteractor;
     }
 
     public void onCreate(Bundle state) {
@@ -102,20 +103,27 @@ public class PlacesMapFragmentPresenter {
                     }
                 });
 
-        Subscription pageNavigatorSubscription = pageNavigator
-                .getEvents()
-                .subscribe(new Action1<Page>() {
+        Subscription pageNavigatorSubscription = pageInteractor
+                .getPlacesLoadedEvents()
+                .subscribe(new Action1<Void>() {
                     @Override
-                    public void call(Page page) {
-                        if (page.fragment().getClass() == PlacesMapFragment.class) {
-                            initMapPlaces();
-                        }
+                    public void call(Void _void) {
+                        initMapPlaces();
+                    }
+                });
+        Subscription pageMapSubscription = pageInteractor
+                .getGoToMapPlaceEvents()
+                .subscribe(new Action1<Place>() {
+                    @Override
+                    public void call(Place place) {
+                        fragment.pagerNavigateTo(place.id());
                     }
                 });
 
         moduleSubscriptions.add(permissionSubscription);
         moduleSubscriptions.add(locationSubscription);
         moduleSubscriptions.add(pageNavigatorSubscription);
+        moduleSubscriptions.add(pageMapSubscription);
     }
 
     private void initMap() {
@@ -222,7 +230,7 @@ public class PlacesMapFragmentPresenter {
         private PlacesRepository placesRepository;
         private PermissionsUtils permissionsUtils;
         private LocationUtils locationUtils;
-        private PageNavigator pageNavigator;
+        private PageInteractor pageInteractor;
 
         public Builder setFragment(PlacesMapFragment fragment) {
             this.fragment = fragment;
@@ -244,8 +252,8 @@ public class PlacesMapFragmentPresenter {
             return this;
         }
 
-        public Builder setPageNavigator(PageNavigator pageNavigator) {
-            this.pageNavigator = pageNavigator;
+        public Builder setPageInteractor(PageInteractor pageInteractor) {
+            this.pageInteractor = pageInteractor;
             return this;
         }
 
