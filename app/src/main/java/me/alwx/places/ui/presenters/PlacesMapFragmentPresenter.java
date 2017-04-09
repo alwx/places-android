@@ -56,8 +56,10 @@ public class PlacesMapFragmentPresenter {
 
         @Override
         public void onPageSelected(int position) {
-            Marker marker = markerList.get(position);
-            animateTo(marker.getPosition());
+            if (position < markerList.size()) {
+                Marker marker = markerList.get(position);
+                animateTo(marker.getPosition());
+            }
         }
 
         @Override
