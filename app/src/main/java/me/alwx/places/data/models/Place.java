@@ -13,6 +13,10 @@ import com.squareup.sqldelight.RowMapper;
 
 import me.alwx.places.data.db.Db;
 
+/**
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @AutoValue
 public abstract class Place implements PlaceModel, Parcelable {
     public abstract Address address();
@@ -30,9 +34,14 @@ public abstract class Place implements PlaceModel, Parcelable {
         }
     };
 
+    /**
+     * Returns an SQL expression to select all from places table.
+     *
+     * @return SQL expression as a string
+     */
     public static String selectAll() {
         return String.format(
-                "SELECT * FROM %1$s JOIN %3$s ON (places.%2$s = %3$s.%4$s);",
+                "SELECT * FROM %1$s JOIN %3$s ON (%1$s.%2$s = %3$s.%4$s);",
                 TABLE_NAME,
                 ID,
                 Address.TABLE_NAME,

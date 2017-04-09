@@ -12,7 +12,7 @@ import dagger.Provides;
 import me.alwx.places.utils.PermissionsUtils;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 @Module

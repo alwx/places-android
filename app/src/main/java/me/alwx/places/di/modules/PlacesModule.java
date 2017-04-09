@@ -13,6 +13,10 @@ import me.alwx.places.data.repositories.local.PlacesLocalDataSource;
 import me.alwx.places.data.repositories.remote.PlacesRemoteDataSource;
 import me.alwx.places.di.scopes.DataScope;
 
+/**
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @Module
 public final class PlacesModule {
     @Provides

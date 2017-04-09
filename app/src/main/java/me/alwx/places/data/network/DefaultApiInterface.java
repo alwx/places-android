@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 import rx.Observable;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 public interface DefaultApiInterface {

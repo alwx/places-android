@@ -16,6 +16,10 @@ import me.alwx.places.ui.presenters.PlacesActivityPresenter;
 import me.alwx.places.utils.PageNavigator;
 import me.alwx.places.utils.PermissionsUtils;
 
+/**
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @Module
 public class PlacesActivityModule {
     private PlacesActivity activity;

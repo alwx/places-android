@@ -27,7 +27,6 @@ import me.alwx.places.ui.presenters.PlacesMapFragmentPresenter;
  * @author alwx
  * @version 1.0
  */
-
 public class PlacesMapFragment extends BaseFragment {
     private FragmentMapBinding binding;
 
@@ -75,32 +74,62 @@ public class PlacesMapFragment extends BaseFragment {
     }
 
     @Override
-    protected void initializeDependencyInjector() {
+    protected void initDependencyInjector() {
         App.get(getActivity())
                 .getPlacesComponent()
                 .plus(new PlacesMapFragmentModule(this))
                 .inject(this);
     }
 
+    /**
+     * Initializes map and set all required callbacks.
+     * To be called by {@link PlacesMapFragmentPresenter}
+     *
+     * @param state    application state
+     * @param callback {@link OnMapReadyCallback} instance
+     */
     public void initMap(final Bundle state, OnMapReadyCallback callback) {
         binding.map.onCreate(state);
         binding.map.getMapAsync(callback);
         binding.map.onResume();
     }
 
+    /**
+     * Initializes ViewPager.
+     *
+     * @param placeList list of {@link Place} objects
+     */
     public void initPager(List<Place> placeList) {
         binding.pager.setAdapter(adapter);
         adapter.setPlaceList(placeList);
     }
 
+    /**
+     * Provides a list of Geodata objects for adapter.
+     * To be called by {@link PlacesMapFragmentPresenter}
+     *
+     * @param geodataList list of {@link Geodata} objects
+     */
     public void setAdapterGeodataList(List<Geodata> geodataList) {
         adapter.setGeodataList(geodataList);
     }
 
+    /**
+     * Provides a Location for adapter.
+     * To be called by {@link PlacesMapFragmentPresenter}
+     *
+     * @param location {@link Location} object
+     */
     public void setAdapterLocation(Location location) {
         adapter.setLocation(location);
     }
 
+    /**
+     * Navigates to an item with specified id.
+     * To be called by {@link PlacesMapFragmentPresenter}
+     *
+     * @param id item id
+     */
     public void pagerNavigateTo(long id) {
         int position = adapter.getPosition(id);
         if (position != -1) {

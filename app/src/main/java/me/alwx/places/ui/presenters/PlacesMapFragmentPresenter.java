@@ -31,10 +31,9 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesMapFragmentPresenter {
     private PlacesMapFragment fragment;
     private PlacesRepository placesRepository;
@@ -179,6 +178,7 @@ public class PlacesMapFragmentPresenter {
         googleMap.animateCamera(cameraUpdate);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void loadPlaces() {
         dataSubscriptions.clear();
 

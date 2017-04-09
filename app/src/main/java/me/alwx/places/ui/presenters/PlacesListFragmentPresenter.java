@@ -20,10 +20,9 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesListFragmentPresenter {
     private PlacesListFragment fragment;
     private PlacesRepository placesRepository;
@@ -46,7 +45,7 @@ public class PlacesListFragmentPresenter {
     }
 
     public void onResume() {
-        fragment.initializePlaceList();
+        fragment.initPlaceList();
         loadPlaces(false);
         locationUtils.startReceivingUpdates();
     }

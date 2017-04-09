@@ -1,6 +1,5 @@
 package me.alwx.places.ui.fragments;
 
-import android.content.pm.PackageInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,10 +16,11 @@ import me.alwx.places.ui.modules.PlacesAboutFragmentModule;
 import me.alwx.places.ui.presenters.PlacesAboutFragmentPresenter;
 
 /**
- * @author alwx
+ * The simple About screen.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesAboutFragment extends BaseFragment {
     private FragmentAboutBinding binding;
 
@@ -37,18 +37,24 @@ public class PlacesAboutFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         binding = DataBindingUtil.bind(view);
 
-        presenter.initializeViews();
+        presenter.initViews();
         return view;
     }
 
     @Override
-    protected void initializeDependencyInjector() {
+    protected void initDependencyInjector() {
         App.get(getActivity())
                 .getPlacesComponent()
                 .plus(new PlacesAboutFragmentModule(this))
                 .inject(this);
     }
 
+    /**
+     * Sets a version information.
+     *
+     * To be called by {@link PlacesAboutFragmentPresenter}
+     * @param text version name
+     */
     public void setVersionText(String text) {
         binding.appVersion.setText(text);
     }

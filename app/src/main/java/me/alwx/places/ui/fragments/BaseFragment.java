@@ -1,11 +1,12 @@
 package me.alwx.places.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 /**
- * @author alwx (http://alwx.me)
+ * Parent fragment for all fragments.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 public abstract class BaseFragment extends Fragment {
@@ -13,8 +14,8 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initializeDependencyInjector();
+        initDependencyInjector();
     }
 
-    protected abstract void initializeDependencyInjector();
+    protected abstract void initDependencyInjector();
 }

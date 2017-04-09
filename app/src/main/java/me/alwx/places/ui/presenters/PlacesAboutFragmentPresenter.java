@@ -9,10 +9,9 @@ import me.alwx.places.R;
 import me.alwx.places.ui.fragments.PlacesAboutFragment;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesAboutFragmentPresenter {
     private PlacesAboutFragment fragment;
     private Context appContext;
@@ -23,7 +22,7 @@ public class PlacesAboutFragmentPresenter {
         this.appContext = appContext;
     }
 
-    public void initializeViews() {
+    public void initViews() {
         fragment.setVersionText(fragment.getString(R.string.about_version, getVersionInfo()));
     }
 

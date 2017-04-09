@@ -9,10 +9,11 @@ import me.alwx.places.data.models.Geodata;
 import me.alwx.places.data.models.Place;
 
 /**
- * @author alwx
+ * Implementation of {@link SQLiteOpenHelper}
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class DbOpenHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
 

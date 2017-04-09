@@ -20,10 +20,11 @@ import me.alwx.places.data.models.Place;
 import me.alwx.places.ui.fragments.PlacesListFragment;
 
 /**
- * @author alwx
+ * Adapter for {@link PlacesListFragment}
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.ViewHolder> {
     private PlacesListFragment fragment;
     private OnClickListener onClickListener;
@@ -45,11 +46,21 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
         return new ViewHolder(v);
     }
 
+    /**
+     * Updates the places list.
+     *
+     * @param placeList list of {@link Place} objects
+     */
     public void setPlaceList(List<Place> placeList) {
         this.placeList = placeList;
         notifyDataSetChanged();
     }
 
+    /**
+     * Updates the geodata list.
+     *
+     * @param geodataList list of {@link Geodata} objects
+     */
     public void setGeodataList(List<Geodata> geodataList) {
         geodataArray = new LongSparseArray<>();
         for (Geodata geodata : geodataList) {
@@ -58,8 +69,22 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
         notifyDataSetChanged();
     }
 
+    /**
+     * Updates location. We need location to calculate the distance between a place and a user.
+     *
+     * @param location {@link Location} object
+     */
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    /**
+     * Sets OnClickListener for an adapter item.
+     *
+     * @param onClickListener listener
+     */
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
     
     @Override
@@ -70,12 +95,14 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Place place = placeList.get(position);
-        /*holder.binding.root.setOnClickListener(new View.OnClickListener() {
+        holder.binding.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickListener.onClick(holder.getAdapterPosition());
+                if (onClickListener != null) {
+                    onClickListener.onClick(placeList.get(holder.getAdapterPosition()));
+                }
             }
-        });*/
+        });
         holder.binding.name.setText(place.title());
         holder.binding.address.setText(place.address().asString());
 
@@ -88,6 +115,12 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
         );
     }
 
+    /**
+     * Displays the distance.
+     *
+     * @param distanceView TextView for distance information
+     * @param distance distance in meters
+     */
     private void bindDistance(@NonNull TextView distanceView, double distance) {
         if (distance == -1d) {
             distanceView.setText("");
@@ -108,6 +141,6 @@ public class PlacesListAdapter extends RecyclerView.Adapter<PlacesListAdapter.Vi
     }
 
     public interface OnClickListener {
-        void onClick(int position);
+        void onClick(Place place);
     }
 }

@@ -11,24 +11,35 @@ import me.alwx.places.data.network.GoogleApiInterface;
 import rx.Observable;
 
 /**
- * @author alwx
+ * Remote data source. Provides data from remote repositories.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
-public class PlacesRemoteDataSource  {
+public class PlacesRemoteDataSource {
     private DefaultApiInterface api;
     private GoogleApiInterface googleApi;
 
-    public PlacesRemoteDataSource(DefaultApiInterface api,
-                                  GoogleApiInterface googleApi) {
+    public PlacesRemoteDataSource(@NonNull DefaultApiInterface api,
+                                  @NonNull GoogleApiInterface googleApi) {
         this.api = api;
         this.googleApi = googleApi;
     }
 
+    /**
+     * Requests places from the default API.
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<List<Place>> getPlaces() {
         return api.getPlaces();
     }
 
+    /**
+     * Requests geo params from the Google API.
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<GeocodeResponse> getGeoParams(String address) {
         return googleApi.getParams(address);
     }

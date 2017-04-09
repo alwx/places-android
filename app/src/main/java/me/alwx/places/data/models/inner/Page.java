@@ -6,6 +6,12 @@ import android.support.v4.app.Fragment;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * A representation of a page for {@link me.alwx.places.ui.adapters.PlacesPagerAdapter}
+ *
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @AutoValue
 public abstract class Page {
     public static Page create(Fragment fragment, @IdRes int id, @StringRes int title) {

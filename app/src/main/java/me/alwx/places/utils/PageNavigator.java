@@ -5,7 +5,8 @@ import rx.Observable;
 import rx.subjects.PublishSubject;
 
 /**
- * This class allows both activities and fragments to subscribe on navigation changes
+ * This class allows both activities and fragments to subscribe on navigation changes.
+ *
  * @author alwx
  * @version 1.0
  */

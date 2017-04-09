@@ -37,8 +37,8 @@ public class PlacesRepository {
 
     private CompositeSubscription geoParamsSubscription;
 
-    public PlacesRepository(PlacesLocalDataSource localDataSource,
-                            PlacesRemoteDataSource remoteDataSource) {
+    public PlacesRepository(@NonNull PlacesLocalDataSource localDataSource,
+                            @NonNull PlacesRemoteDataSource remoteDataSource) {
         this.localDataSource = localDataSource;
         this.remoteDataSource = remoteDataSource;
 

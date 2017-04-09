@@ -14,7 +14,7 @@ import com.squareup.sqldelight.RowMapper;
 import me.alwx.places.data.db.Db;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 @AutoValue
@@ -31,6 +31,14 @@ public abstract class Geodata implements GeodataModel, Parcelable {
         }
     };
 
+    /**
+     * This method calculates the distance between Geodata and Location objects.
+     *
+     * @param geodata  Geodata object
+     * @param location Location object
+     * @return distance in meters
+     */
+    @SuppressWarnings("ConstantConditions")
     public static double calculateDistance(@Nullable Geodata geodata,
                                            @Nullable Location location) {
         if (geodata != null && location != null
@@ -48,6 +56,11 @@ public abstract class Geodata implements GeodataModel, Parcelable {
         }
     }
 
+    /**
+     * Returns an SQL expression to select all from geodata table.
+     *
+     * @return SQL expression as a string
+     */
     public static String selectAll() {
         return String.format("SELECT * FROM %1$s;", TABLE_NAME);
     }
@@ -59,9 +72,13 @@ public abstract class Geodata implements GeodataModel, Parcelable {
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder setId(long id);
+
         public abstract Builder setLatitude(Float latitude);
+
         public abstract Builder setLongitude(Float longitude);
+
         public abstract Builder setAddress(String address);
+
         public abstract Geodata build();
     }
 }

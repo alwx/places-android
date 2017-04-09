@@ -18,10 +18,11 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
- * @author alwx
+ * Local data source. Provides data from local SQLite repository.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesLocalDataSource {
     private BriteDatabase database;
     private SQLiteOpenHelper openHelper;
@@ -31,6 +32,11 @@ public class PlacesLocalDataSource {
         this.openHelper = openHelper;
     }
 
+    /**
+     * Requests places from the local SQLite database
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<List<Place>> getPlaces() {
         return database
                 .createQuery(Place.TABLE_NAME, Place.selectAll())
@@ -42,6 +48,11 @@ public class PlacesLocalDataSource {
                 });
     }
 
+    /**
+     * Requests geo data from the local SQLite database
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<List<Geodata>> getGeodata() {
         return database
                 .createQuery(Geodata.TABLE_NAME, Geodata.selectAll())
@@ -53,6 +64,11 @@ public class PlacesLocalDataSource {
                 });
     }
 
+    /**
+     * Saves a place into the local SQLite database.
+     *
+     * @param place a {@link Place} object
+     */
     public void savePlace(@NonNull Place place) {
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
@@ -75,6 +91,11 @@ public class PlacesLocalDataSource {
         }
     }
 
+    /**
+     * Saves a Geodata object into the local SQLite database.
+     *
+     * @param geodata a {@link Geodata} object
+     */
     public void saveGeodata(@NonNull Geodata geodata) {
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
@@ -83,6 +104,9 @@ public class PlacesLocalDataSource {
         database.executeInsert(Geodata.TABLE_NAME, geodataInsertRow.program);
     }
 
+    /**
+     * Removes all places data from the local SQLite database.
+     */
     public void removeAll() {
         database.execute(Place.DELETEALL);
         database.execute(Address.DELETEALL);

@@ -15,7 +15,7 @@ import me.alwx.places.di.modules.NetworkModule;
 import timber.log.Timber;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 public class App extends Application {
@@ -30,10 +30,10 @@ public class App extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-        initializeDependencyInjector();
+        initDependencyInjector();
     }
 
-    private void initializeDependencyInjector() {
+    private void initDependencyInjector() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .networkModule(new NetworkModule())

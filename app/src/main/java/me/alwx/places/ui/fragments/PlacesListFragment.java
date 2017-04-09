@@ -28,7 +28,6 @@ import me.alwx.places.ui.presenters.PlacesListFragmentPresenter;
  * @author alwx
  * @version 1.0
  */
-
 public class PlacesListFragment extends BaseFragment {
     private FragmentPlacesBinding binding;
 
@@ -86,14 +85,19 @@ public class PlacesListFragment extends BaseFragment {
     }
 
     @Override
-    protected void initializeDependencyInjector() {
+    protected void initDependencyInjector() {
         App.get(getActivity())
                 .getPlacesComponent()
                 .plus(new PlacesListFragmentModule(this))
                 .inject(this);
     }
 
-    public void initializePlaceList() {
+    /**
+     * Initializes places list and sets all required decorators and layout managers.
+     * Also binds onRefreshListener.
+     * To be called by {@link PlacesListFragmentPresenter}
+     */
+    public void initPlaceList() {
         binding.list.setHasFixedSize(true);
         binding.list.setLayoutManager(layoutManager);
         binding.list.addItemDecoration(dividerItemDecoration);
@@ -101,15 +105,31 @@ public class PlacesListFragment extends BaseFragment {
         binding.refresh.setOnRefreshListener(onRefreshListener);
     }
 
+    /**
+     * Changes the loading state.
+     * To be called by {@link PlacesListFragmentPresenter}
+     *
+     * @param loading boolean indicator
+     */
     public void changeLoadingState(boolean loading) {
         binding.refresh.setRefreshing(loading);
     }
 
+    /**
+     * Displays the error.
+     * To be called by {@link PlacesListFragmentPresenter}
+     */
     public void showError() {
         binding.list.setVisibility(View.GONE);
         binding.empty.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Provides a list of places for adapter.
+     * To be called by {@link PlacesListFragmentPresenter}
+     *
+     * @param placeList list of {@link Place} objects
+     */
     public void showPlaceList(List<Place> placeList) {
         binding.list.setVisibility(View.VISIBLE);
         binding.empty.setVisibility(View.GONE);
@@ -117,11 +137,33 @@ public class PlacesListFragment extends BaseFragment {
         adapter.setPlaceList(placeList);
     }
 
+    /**
+     * Provides a list of Geodata objects for adapter.
+     * To be called by {@link PlacesListFragmentPresenter}
+     *
+     * @param geodataList list of {@link Geodata} objects
+     */
     public void setAdapterGeodataList(List<Geodata> geodataList) {
         adapter.setGeodataList(geodataList);
     }
 
+    /**
+     * Provides a Location for adapter.
+     * To be called by {@link PlacesListFragmentPresenter}
+     *
+     * @param location {@link Location} object
+     */
     public void setAdapterLocation(Location location) {
         adapter.setLocation(location);
+    }
+
+    /**
+     * Sets a OnClickListener for adapter.
+     * To be called by {@link PlacesListFragmentPresenter}
+     *
+     * @param listener instance of OnClickListener
+     */
+    public void setAdapterOnClickListener(PlacesListAdapter.OnClickListener listener) {
+        adapter.setOnClickListener(listener);
     }
 }

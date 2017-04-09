@@ -1,13 +1,13 @@
 package me.alwx.places.ui.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * @author alwx
+ * Parent activity for all activities.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 public abstract class BaseActivity extends AppCompatActivity {
@@ -15,8 +15,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initializeDependencyInjector();
+        initDependencyInjector();
     }
 
-    protected abstract void initializeDependencyInjector();
+    protected abstract void initDependencyInjector();
 }

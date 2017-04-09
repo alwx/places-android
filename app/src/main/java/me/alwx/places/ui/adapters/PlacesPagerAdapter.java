@@ -11,10 +11,11 @@ import java.util.List;
 import me.alwx.places.data.models.inner.Page;
 
 /**
- * @author alwx
+ * Adapter for main ViewPager inside {@link me.alwx.places.ui.activities.PlacesActivity}
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesPagerAdapter extends FragmentStatePagerAdapter {
     private List<Page> pageList;
 

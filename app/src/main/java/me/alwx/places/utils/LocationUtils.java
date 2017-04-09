@@ -16,10 +16,11 @@ import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 /**
- * @author alwx
+ * This class requests and updates location.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class LocationUtils {
     private GoogleApiClient apiClient;
     private PermissionsUtils permissionsUtils;
@@ -61,6 +62,9 @@ public class LocationUtils {
         this.permissionsUtils = permissionsUtils;
     }
 
+    /**
+     * Starts listening for location updates.
+     */
     public void startReceivingUpdates() {
         permissionsUtils
                 .checkPermissions(
@@ -77,10 +81,18 @@ public class LocationUtils {
                 });
     }
 
+    /**
+     * Stops listening for location updates.
+     */
     public void stopReceivingUpdates() {
         apiClient.unregisterConnectionCallbacks(connectionCallbacks);
     }
 
+    /**
+     * Returns the Observable with the location.
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<Location> getLocation() {
         return subject;
     }

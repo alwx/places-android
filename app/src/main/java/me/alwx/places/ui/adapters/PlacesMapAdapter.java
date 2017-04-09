@@ -1,13 +1,14 @@
 package me.alwx.places.ui.adapters;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,11 @@ import me.alwx.places.databinding.ItemMapPlaceBinding;
 import me.alwx.places.ui.fragments.PlacesMapFragment;
 
 /**
- * @author alwx
+ * ViewPager adapter for {@link PlacesMapFragment}
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PlacesMapAdapter extends PagerAdapter {
     private PlacesMapFragment fragment;
     private List<Place> placeList = new ArrayList<>();
@@ -34,11 +36,21 @@ public class PlacesMapAdapter extends PagerAdapter {
         this.fragment = fragment;
     }
 
+    /**
+     * Updates the places list.
+     *
+     * @param placeList list of {@link Place} objects
+     */
     public void setPlaceList(List<Place> placeList) {
         this.placeList = placeList;
         notifyDataSetChanged();
     }
 
+    /**
+     * Updates the geodata list.
+     *
+     * @param geodataList list of {@link Geodata} objects
+     */
     public void setGeodataList(List<Geodata> geodataList) {
         geodataArray = new LongSparseArray<>();
         for (Geodata geodata : geodataList) {
@@ -47,10 +59,21 @@ public class PlacesMapAdapter extends PagerAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Updates location. We need location to calculate the distance between a place and a user.
+     *
+     * @param location {@link Location} object
+     */
     public void setLocation(Location location) {
         this.location = location;
     }
 
+    /**
+     * Returns a position (index) of an item by its ID.
+     *
+     * @param id id of an item
+     * @return item's index
+     */
     public int getPosition(long id) {
         for (int i = 0; i < placeList.size(); i++) {
             if (placeList.get(i).id() == id) {
@@ -72,20 +95,32 @@ public class PlacesMapAdapter extends PagerAdapter {
         binding.name.setText(place.title());
         binding.address.setText(place.address().asString());
 
-        double d = Geodata.calculateDistance(
-                geodataArray.get(place.id()),
-                location
+        bindDistance(
+                binding.distance,
+                Geodata.calculateDistance(
+                        geodataArray.get(place.id()),
+                        location
+                )
         );
-        if (d == -1d) {
-            binding.distance.setText("");
-        } else if (d >= 1000) {
-            binding.distance.setText(fragment.getString(R.string.kilometers, d / 1000d));
-        } else {
-            binding.distance.setText(fragment.getString(R.string.meters, (int) d));
-        }
 
         container.addView(v);
         return v;
+    }
+
+    /**
+     * Displays the distance.
+     *
+     * @param distanceView TextView for distance information
+     * @param distance distance in meters
+     */
+    private void bindDistance(@NonNull TextView distanceView, double distance) {
+        if (distance == -1d) {
+            distanceView.setText("");
+        } else if (distance >= 1000) {
+            distanceView.setText(fragment.getString(R.string.kilometers, distance / 1000d));
+        } else {
+            distanceView.setText(fragment.getString(R.string.meters, (int) distance));
+        }
     }
 
     @Override

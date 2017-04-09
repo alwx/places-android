@@ -16,6 +16,10 @@ import java.util.List;
 
 import me.alwx.places.data.db.Db;
 
+/**
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @AutoValue
 public abstract class Address implements AddressModel, Parcelable {
     public static final RowMapper<Address> MAPPER = new RowMapper<Address>() {
@@ -38,6 +42,13 @@ public abstract class Address implements AddressModel, Parcelable {
         return new AutoValue_Address.GsonTypeAdapter(gson);
     }
 
+    /**
+     * Returns a string representation of Address.
+     * The difference between this method and toString method is that this one
+     * returns data in a human-readable form
+     *
+     * @return address
+     */
     public String asString() {
         List<String> list = new LinkedList<>();
 
@@ -50,7 +61,13 @@ public abstract class Address implements AddressModel, Parcelable {
         return TextUtils.join(", ", list);
     }
 
-    private void addToList(List<String> list, @Nullable String field) {
+    /**
+     * Helper method that adds field to list if field is not empty.
+     *
+     * @param list destination list
+     * @param field text data
+     */
+    private void addToList(@NonNull List<String> list, @Nullable String field) {
         if (field != null && !field.isEmpty()) {
             list.add(field);
         }

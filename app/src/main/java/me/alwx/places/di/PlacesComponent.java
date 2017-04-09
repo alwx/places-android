@@ -14,6 +14,10 @@ import me.alwx.places.ui.modules.PlacesActivityModule;
 import me.alwx.places.ui.modules.PlacesListFragmentModule;
 import me.alwx.places.ui.modules.PlacesMapFragmentModule;
 
+/**
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @DataScope
 @Subcomponent(modules={ PlacesModule.class, LocationModule.class, PageNavigatorModule.class})
 public interface PlacesComponent {

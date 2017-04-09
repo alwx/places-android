@@ -14,6 +14,10 @@ import me.alwx.places.ui.fragments.PlacesListFragment;
 import me.alwx.places.ui.presenters.PlacesListFragmentPresenter;
 import me.alwx.places.utils.LocationUtils;
 
+/**
+ * @author alwx (https://alwx.me)
+ * @version 1.0
+ */
 @Module
 public class PlacesListFragmentModule {
     private PlacesListFragment fragment;

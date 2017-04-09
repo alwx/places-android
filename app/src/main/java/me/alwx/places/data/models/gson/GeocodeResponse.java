@@ -3,6 +3,9 @@ package me.alwx.places.data.models.gson;
 import java.util.List;
 
 /**
+ * This class parses the Geocode response.
+ * It is used by GSON.
+ *
  * @author alwx (http://alwx.me)
  * @version 1.0
  */
@@ -23,13 +26,13 @@ public class GeocodeResponse {
         return 0;
     }
 
-    public static class Result {
+    private static class Result {
         private Geometry geometry;
 
-        public static class Geometry {
+        private static class Geometry {
             private Location location;
 
-            public static class Location {
+            private static class Location {
                 private float lat;
                 private float lng;
             }

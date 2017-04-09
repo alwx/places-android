@@ -1,7 +1,5 @@
 package me.alwx.places.di;
 
-import android.content.Context;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -11,7 +9,7 @@ import me.alwx.places.di.modules.NetworkModule;
 import me.alwx.places.di.modules.PlacesModule;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 @Singleton

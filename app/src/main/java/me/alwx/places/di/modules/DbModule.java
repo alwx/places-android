@@ -15,10 +15,9 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 @Module
 public final class DbModule {
     private Application application;

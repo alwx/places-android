@@ -17,7 +17,7 @@ import me.alwx.places.utils.PageNavigator;
 import me.alwx.places.utils.PermissionsUtils;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 public class PlacesActivityPresenter {

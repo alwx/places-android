@@ -6,7 +6,7 @@ import me.alwx.places.di.scopes.DataScope;
 import me.alwx.places.utils.PageNavigator;
 
 /**
- * @author alwx
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
 @Module

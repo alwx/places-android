@@ -13,10 +13,11 @@ import rx.subjects.PublishSubject;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
- * @author alwx
+ * This class controls runtime permissions.
+ *
+ * @author alwx (https://alwx.me)
  * @version 1.0
  */
-
 public class PermissionsUtils {
     private static final int PERMISSIONS_REQUEST = 1;
 
@@ -27,6 +28,12 @@ public class PermissionsUtils {
         this.context = context;
     }
 
+    /**
+     * Requests the required permissions.
+     *
+     * @param activity    current activity (the activity should forward onRequestResult method)
+     * @param permissions required permissions
+     */
     public void requestPermissions(@NonNull final Activity activity,
                                    @NonNull final String... permissions) {
         checkPermissions(permissions).subscribe(new Action1<Boolean>() {
@@ -45,6 +52,11 @@ public class PermissionsUtils {
         });
     }
 
+    /**
+     * Checks the permissions.
+     *
+     * @param permissions required permissions
+     */
     public Observable<Boolean> checkPermissions(@NonNull final String... permissions) {
         return Observable.from(permissions).all(new Func1<String, Boolean>() {
             @Override
@@ -54,10 +66,23 @@ public class PermissionsUtils {
         });
     }
 
+    /**
+     * Returns an Observable with request results.
+     *
+     * @return the new {@link Observable} instance
+     */
     public Observable<String[]> getRequestResults() {
         return subject;
     }
 
+    /**
+     * Checks the request result.
+     * This method should be called in activity's onRequestResult.
+     *
+     * @param requestCode  request code
+     * @param permissions  required permissions
+     * @param grantResults result
+     */
     public void onRequestResult(int requestCode,
                                 String[] permissions,
                                 int[] grantResults) {
@@ -68,6 +93,12 @@ public class PermissionsUtils {
         }
     }
 
+    /**
+     * Checks if permission is granted.
+     *
+     * @param permission required permission
+     * @return true/false value
+     */
     private boolean isPermissionGranted(@NonNull String permission) {
         return ActivityCompat.checkSelfPermission(context, permission) == PERMISSION_GRANTED;
     }
