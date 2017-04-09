@@ -24,7 +24,6 @@ import rx.functions.Action1;
  * @version 1.0
  */
 public class PlacesActivityPresenter {
-
     private PlacesActivity activity;
     private GoogleApiClient googleApiClient;
     private PermissionsUtils permissionsUtils;
@@ -33,6 +32,10 @@ public class PlacesActivityPresenter {
 
     private Subscription pageInteractorSubscription;
 
+    /**
+     * This listener listens for page changes.
+     * TODO: inject it with Dagger
+     */
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -60,12 +63,22 @@ public class PlacesActivityPresenter {
         this.pageInteractor = builder.pageInteractor;
     }
 
+    /**
+     * Obtains results of permission requests.
+     *
+     * @param requestCode request code
+     * @param permissions requested permissions
+     * @param grantResults results
+     */
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions,
                                            int[] grantResults) {
         permissionsUtils.onRequestResult(requestCode, permissions, grantResults);
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onCreate() call.
+     */
     public void onCreate() {
         activity.initPager(pagerAdapter);
         activity.setTitle(pagerAdapter.getPage(0).title());
@@ -85,16 +98,25 @@ public class PlacesActivityPresenter {
                 });
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onStart() call.
+     */
     public void onStart() {
         googleApiClient.connect();
         activity.setPagerCallbacks(onPageChangeListener);
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onStop() call.
+     */
     public void onStop() {
         googleApiClient.disconnect();
         activity.clearPagerCallbacks(onPageChangeListener);
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onDestroy() call.
+     */
     public void onDestroy() {
         if (pageInteractorSubscription != null) {
             pageInteractorSubscription.unsubscribe();
@@ -102,6 +124,9 @@ public class PlacesActivityPresenter {
         }
     }
 
+    /**
+     * Initializes the bottom bar
+     */
     private void initBottomBar() {
         activity.initBottomBar(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -124,6 +149,10 @@ public class PlacesActivityPresenter {
         );
     }
 
+    /**
+     * Because telescoping constructor is a bad pattern, we use this Builder
+     * to construct a presenter.
+     */
     public static class Builder {
         private PlacesActivity activity;
         private GoogleApiClient googleApiClient;

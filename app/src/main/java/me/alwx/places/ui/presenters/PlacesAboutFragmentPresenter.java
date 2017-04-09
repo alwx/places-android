@@ -22,10 +22,18 @@ public class PlacesAboutFragmentPresenter {
         this.appContext = appContext;
     }
 
+    /**
+     * Initializes fragment's dynamic views
+     */
     public void initViews() {
         fragment.setVersionText(fragment.getString(R.string.about_version, getVersionInfo()));
     }
 
+    /**
+     * Returns the information about application version
+     *
+     * @return version name
+     */
     @Nullable
     private String getVersionInfo() {
         try {

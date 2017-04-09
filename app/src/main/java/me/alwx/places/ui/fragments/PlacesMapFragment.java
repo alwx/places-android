@@ -147,18 +147,19 @@ public class PlacesMapFragment extends BaseFragment {
     }
 
     /**
-     * Navigates to an item with specified id.
+     * Navigates to an item with a specified position.
      * To be called by {@link PlacesMapFragmentPresenter}
      *
-     * @param id item id
+     * @param position item position
      */
-    public void pagerNavigateTo(long id) {
+    public void pagerNavigateTo(int position) {
         if (binding.pager.getAdapter() == null) {
             binding.pager.setAdapter(adapter);
         }
-        int position = adapter.getPosition(id);
-        if (position != -1) {
-            binding.pager.setCurrentItem(position);
-        }
+        binding.pager.setCurrentItem(position);
+    }
+
+    public int getAdapterPosition(long id) {
+        return adapter.getPosition(id);
     }
 }

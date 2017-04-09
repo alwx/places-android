@@ -42,21 +42,33 @@ public class PlacesListFragmentPresenter {
         this.pageInteractor = builder.pageInteractor;
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onCreate() call.
+     */
     public void onCreate(Bundle state) {
-        subscribeToEvents();
+        subscribeToLocationChanges();
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onResume() call.
+     */
     public void onResume() {
         fragment.initPlaceList();
         loadPlaces(false);
         locationUtils.startReceivingUpdates();
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onPause() call.
+     */
     public void onPause() {
         loadSubscriptions.clear();
         locationUtils.stopReceivingUpdates();
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onDestroy() call.
+     */
     public void onDestroy() {
         if (locationSubscription != null) {
             locationSubscription.unsubscribe();
@@ -64,11 +76,22 @@ public class PlacesListFragmentPresenter {
         }
     }
 
+    /**
+     * Loads places from remote source and/or from the database
+     *
+     * @param forceUpdate indicates whether we will be requiring data from the server or not
+     */
     public void loadPlaces(boolean forceUpdate) {
         loadPlaces(forceUpdate || firstLoad, true);
         firstLoad = false;
     }
 
+    /**
+     * Loads places from remote source and/or from the database
+     *
+     * @param forceUpdate indicates whether we will be requiring data from the server or not
+     * @param showLoadingUI display refreshing spinner or not
+     */
     private void loadPlaces(final boolean forceUpdate, final boolean showLoadingUI) {
         if (showLoadingUI) {
             fragment.changeLoadingState(true);
@@ -128,7 +151,10 @@ public class PlacesListFragmentPresenter {
         loadSubscriptions.add(placesSubscription);
     }
 
-    private void subscribeToEvents() {
+    /**
+     * Subscribes to location changes
+     */
+    private void subscribeToLocationChanges() {
         locationSubscription = locationUtils.getLocation().subscribe(new Action1<Location>() {
             @Override
             public void call(Location location) {
@@ -137,6 +163,9 @@ public class PlacesListFragmentPresenter {
         });
     }
 
+    /**
+     * Sets OnClickListener for list items
+     */
     private void setOnClickListener() {
         fragment.setAdapterOnClickListener(
                 new PlacesListAdapter.OnClickListener() {
@@ -148,6 +177,10 @@ public class PlacesListFragmentPresenter {
         );
     }
 
+    /**
+     * Because telescoping constructor is a bad pattern, we use this Builder
+     * to construct a presenter.
+     */
     public static class Builder {
         private PlacesListFragment fragment;
         private PlacesRepository placesRepository;

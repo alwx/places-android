@@ -49,6 +49,10 @@ public class PlacesMapFragmentPresenter {
     private CompositeSubscription moduleSubscriptions = new CompositeSubscription();
     private CompositeSubscription dataSubscriptions = new CompositeSubscription();
 
+    /**
+     * This listener listens for selected Place changes.
+     * TODO: inject it with Dagger
+     */
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -77,27 +81,47 @@ public class PlacesMapFragmentPresenter {
         this.pageInteractor = builder.pageInteractor;
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onCreate() call.
+     */
     public void onCreate(Bundle state) {
         this.state = state;
         subscribeToEvents();
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onResume() call.
+     */
     public void onResume() {
         locationUtils.startReceivingUpdates();
         initMap();
         fragment.setPagerCallbacks(onPageChangeListener);
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onPause() call.
+     */
     public void onPause() {
         locationUtils.stopReceivingUpdates();
         fragment.clearPagerCallbacks(onPageChangeListener);
     }
 
+    /**
+     * Delegate method for the standard Android lifecycle onDestroy() call.
+     */
     public void onDestroy() {
         moduleSubscriptions.clear();
         dataSubscriptions.clear();
     }
 
+    /**
+     * Subscribes to several important events like permission request results, location
+     * request results and page interactor events.
+     *
+     * @see PageInteractor
+     * @see LocationUtils
+     * @see PermissionsUtils
+     */
     private void subscribeToEvents() {
         Subscription permissionSubscription = permissionsUtils
                 .getRequestResults()
@@ -124,7 +148,7 @@ public class PlacesMapFragmentPresenter {
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void _void) {
-                        initMapPlaces();
+                        addMapPlaces();
                     }
                 });
         Subscription pageMapSubscription = pageInteractor
@@ -132,7 +156,13 @@ public class PlacesMapFragmentPresenter {
                 .subscribe(new Action1<Place>() {
                     @Override
                     public void call(Place place) {
-                        fragment.pagerNavigateTo(place.id());
+                        int pos = fragment.getAdapterPosition(place.id());
+                        if (pos != -1) {
+                            Marker marker = markerList.get(pos);
+                            animateTo(marker.getPosition());
+
+                            fragment.pagerNavigateTo(pos);
+                        }
                     }
                 });
 
@@ -142,6 +172,9 @@ public class PlacesMapFragmentPresenter {
         moduleSubscriptions.add(pageMapSubscription);
     }
 
+    /**
+     * Initializes Google map.
+     */
     private void initMap() {
         Handler initMapHandler = new Handler();
         Runnable initMapRunnable = new Runnable() {
@@ -153,6 +186,9 @@ public class PlacesMapFragmentPresenter {
         initMapHandler.post(initMapRunnable);
     }
 
+    /**
+     * Continues intitializing map. Should be called only from initMap()
+     */
     private void initMapAsync() {
         fragment.initMap(state, new OnMapReadyCallback() {
             @Override
@@ -179,13 +215,19 @@ public class PlacesMapFragmentPresenter {
         });
     }
 
-    private void initMapPlaces() {
+    /**
+     * Adds places to the map. Map should be initialized.
+     */
+    private void addMapPlaces() {
         googleMap.clear();
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 long id = Integer.valueOf(marker.getTitle());
-                fragment.pagerNavigateTo(id);
+                int pos = fragment.getAdapterPosition(id);
+                if (pos != -1) {
+                    fragment.pagerNavigateTo(pos);
+                }
 
                 return true;
             }
@@ -202,11 +244,19 @@ public class PlacesMapFragmentPresenter {
         });
     }
 
+    /**
+     * Animates camera to a given position.
+     *
+     * @param latLng position
+     */
     private void animateTo(LatLng latLng) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
         googleMap.animateCamera(cameraUpdate);
     }
 
+    /**
+     * Subscribes to places and geodata changes in the database and updates the UI if needed.
+     */
     @SuppressWarnings("ConstantConditions")
     private void loadPlaces() {
         dataSubscriptions.clear();
@@ -246,6 +296,10 @@ public class PlacesMapFragmentPresenter {
         dataSubscriptions.add(placesSubscription);
     }
 
+    /**
+     * Because telescoping constructor is a bad pattern, we use this Builder
+     * to construct a presenter.
+     */
     public static class Builder {
         private PlacesMapFragment fragment;
         private PlacesRepository placesRepository;
